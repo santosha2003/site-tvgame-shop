@@ -1,0 +1,75 @@
+.t	{font-family : Verdana, Tahoma, Arial; font-weight : normal; font-size : 8pt}
+.sm	{font-family : Verdana, Tahoma, Arial; font-weight : normal; font-size : 7pt}
+.smb	{font-family : Verdana, Tahoma, Arial; font-weight : bold; font-size : 7pt}
+.tb	{font-family : Verdana, Tahoma, Arial; font-weight : bold; font-size : 7pt}
+.t1	{font-family : Tahoma, Verdana, Arial; font-weight : normal; font-size : 9pt}
+.title	{font-family :  Tahoma, Verdana, Arial; font-weight : bold; font-size : 12pt; color: #000000}
+.white	{font-family : Verdana,Tahoma, Arial; font-weight : bold; font-size : 7pt; color: #ffffff}
+.white2	{font-family : Verdana,Tahoma, Arial; font-weight : bold; font-size : 10pt; color: #ffffff}
+.wn	{font-family : Verdana,Tahoma, Arial; font-weight : normal; font-size : 8pt; color: #ffffff}
+
+.tit1	{font-family :  Verdana, Tahoma, Arial; font-weight : bold; font-size : 13pt; color: #1C5B4A}
+.tit2	{font-family :  Verdana, Tahoma, Arial; font-weight : bold; font-size : 13pt; color: #B92D22}
+
+.form {
+text-align: left; 
+font-size: 8pt; 
+font-family: Verdana; 
+background-color: #ffffff; 
+border-width: 1; 
+border-style: solid; 
+border-color: #DFDFDF; 
+color: #000000}
+
+
+.knopka	{
+BORDER-RIGHT: #DFDFDF 1px solid;
+BORDER-TOP: #DFDFDF 1px solid;
+BORDER-LEFT: #DFDFDF 1px solid;
+BORDER-BOTTOM: #DFDFDF 1px solid;
+FONT-SIZE: 8pt;
+COLOR: #ffffff;
+FONT-FAMILY: Verdana;
+BACKGROUND-COLOR: #D30000; 
+TEXT-ALIGN: center;
+font-weight : bold;
+font-size : 8pt}
+
+
+.gr	{font-family :  Verdana, Tahoma, Arial; font-weight : normal; font-size : 7pt; color: #818080}
+.red	{font-family :  Verdana, Tahoma, Arial; font-weight : normal; font-size : 7pt; color: #C80000}
+.green	{font-family :  Verdana, Tahoma, Arial; font-weight : bold; font-size : 7pt; color: #2D6354}
+
+
+:link	{color: #0057A9; text-decoration : none;}
+:visited{color: #0057A9; text-decoration : none;}
+:active	{color: #0057A9; text-decoration : none;}
+:hover	{color: #2683DA; text-decoration : underline;}
+
+A.menu:link	{color:	#ffffff; text-decoration: none}
+A.menu:visited{color:	#ffffff; text-decoration: none}
+A.menu:active	{color:	#ffffff; text-decoration: none}
+A.menu:hover	{color:	#ffffff; text-decoration: underline}
+
+A.w:link	{color:	#ffffff; text-decoration: none}
+A.w:visited     {color:	#ffffff; text-decoration: none}
+A.w:active	{color:	#ffffff; text-decoration: none}
+A.w:hover	{color:	#FFE1E1; text-decoration: underline}
+
+
+
+A.b:link	{color:	#000000; text-decoration: none}
+A.b:visited{color:	#000000; text-decoration: none}
+A.b:active	{color:	#000000; text-decoration: none}
+A.b:hover	{color:	#D30000; text-decoration: none}
+
+
+A.r:link	{color:	#D30000; text-decoration: none}
+A.r:visited{color:	#D30000; text-decoration: none}
+A.r:active	{color:	#D30000; text-decoration: none}
+A.r:hover	{color:	#D30000; text-decoration: underline}
+
+A.g:link	{color:	#316303; text-decoration: none}
+A.g:visited{color:	#316303; text-decoration: none}
+A.g:active	{color:	#316303; text-decoration: none}
+A.g:hover	{color:	#316303; text-decoration: underline}

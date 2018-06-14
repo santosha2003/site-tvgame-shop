@@ -1,0 +1,166 @@
+<?php
+require_once("./lib/config.php");
+
+$tmpl -> loadTemplatefile("item.inc",true,true);
+
+$idgoods = $_GET['id'];
+$row = $db -> getRow("SELECT * FROM items WHERE id='$idgoods' AND status ='Y' AND shops LIKE '%|$shop_true_id|%'");
+if(!empty($row)) {
+
+if($row[photo_small1]) {
+list($width1, $height1) = getimagesize("images/photo/".$row[photo_big1]);
+
+  $tmpl -> setCurrentBlock('photo_small1');
+$row[width1]=$width1+20;
+$row[height1]=$height1+30;
+$row[w1]="70";
+$row[h1]="70";
+$row[border1]="1";
+//
+$tmpl -> parseCurrentBlock('photo_small1');
+}else{
+$row[w1]="1";
+$row[h1]="1";
+$row[border1]="0";
+$row[photo_small1]="1p.gif";
+//
+$tmpl -> touchBlock('no_photo_small1');
+}
+
+if(!empty($row[photo_small2])){
+list($width2, $height2) = getimagesize("images/photo/".$row[photo_big2]);
+$row[width2]=$width2+20;
+$row[height2]=$height2+30;
+//
+$tmpl -> setCurrentBlock('photo_small2');
+$row[w2]="70";
+$row[h2]="70";
+$row[border2]="1";
+  $tmpl -> parseCurrentBlock('photo_small2');
+}else{
+//
+$tmpl -> touchBlock('no_photo_small2');
+$row[w2]="1";
+$row[h2]="1";
+$row[border2]="0";
+$row[photo_small2]="1p.gif";
+}
+
+
+
+
+
+
+// не выводить модель и артикул
+  if(empty($row[sku])) unset($row[sku]);
+  if(empty($row[model])) unset($row[model]);
+  if(empty($row[mark])) unset($row[mark]);
+list($width, $height) = getimagesize("images/photo/".$row[photo_big]);
+$row[width]=$width+20;
+$row[height]=$height+30;
+
+
+
+
+
+
+  // производитель
+  $ref = $db -> getRow("SELECT name as vendor_name, photo as vendor_pic FROM vendor WHERE id='$row[vendor]' AND status='Y'");
+  if(!empty($ref)) {
+        $ref[vendor_pic] = photo_name($ref[vendor_pic],"images/pict/");
+        $ref[vendor_wh] = photo_size($ref[vendor_pic],150,50);
+        $tmpl -> setCurrentBlock("vendor");
+        $tmpl -> setVariable($ref);
+        $tmpl -> parseCurrentBlock("vendor");
+  }
+// технические характеристики
+  $ref = $db -> query("SELECT a.name as ref_name, b.value as ref_value FROM items_ref a, items_value b WHERE b.id='$row[id]' AND b.rid=a.id AND a.status='Y' AND b.value != '' ORDER BY b.updown");
+  if($ref -> numRows()) {
+        while($arr = $ref -> fetchRow()) {
+          $tmpl -> setCurrentBlock("list_ref");
+          $tmpl -> setVariable($arr);
+          $tmpl -> parseCurrentBlock("list_ref");
+        }
+  }
+// св€заные товары
+  bottom_block($row[part],"part","items","name",array("model","price"));        // св€заные товары
+// рекомендованые товары
+  bottom_block($row[spec],"spec","items","name",array("model","price"));        // рекомендованые товары
+// св€заные статьи
+  bottom_block($row[article],"article","content","shorttitle");                                // св€заные статьи
+// свойства товара
+  bottom_block($row[svva],"svva","svva","name",array("photo","id"));
+  $row[nalich]="≈сть в наличии";
+  $row[photo_big] = photo_name($row[photo_big]);
+  $row[photo_small] = photo_name($row[photo_small]);
+  $row[wh] = photo_size($row[photo_small],200,150);
+  $tmpl -> setVariable($row);
+
+// иконка дл€ новинки, товара сезона, спецпредложени€
+  if(!empty($row['new'])        AND strpos($row['new'],"|$shop_true_id|") !== false)        $tmpl->touchBlock('new');
+  if(!empty($row['statu'])        AND strpos($row['statu'],"-$shop_true_id|") !== false)        $tmpl->touchBlock('ts');
+  $res = $db -> getOne("SELECT id FROM spec WHERE status='Y' AND shops LIKE '%|$shop_true_id|%' AND items LIKE '%|$row[id]|%' AND start_date < now() AND (end_date > now() OR end_date='1970-01-01 00:00')");
+  if(!empty($res))        $tmpl->touchBlock('sp');
+
+
+} else {
+// редирект на страницу каталога из которого товар
+  header("Location: index.php");
+  exit;
+}
+
+function bottom_block($str,$field,$table='items',$title='name',$additional=array()) {
+  GLOBAL $db, $tmpl;
+
+  if(!empty($str)) {
+        $part = explode("|",$str);
+        $size =  sizeof($part)-1;
+        for($i = 1; $i < $size; $i++) {
+          $name = $db -> getOne("SELECT $title FROM $table WHERE id='$part[$i]' AND status='Y'");
+          if($table=='content') {
+                if(empty($name)) $name = $db -> getOne("SELECT title FROM $table WHERE id='$part[$i]' AND status='Y'");
+                $part[$i] = $db -> getOne("SELECT url FROM $table WHERE id='$part[$i]' AND status='Y'");
+          }
+          if(empty($name)) continue;
+          $tmpl -> setCurrentBlock("list_".$field);
+          if(!empty($additional)) {
+                foreach($additional as $add_val) {
+                  $tmp_ops = $db ->getOne("SELECT $add_val FROM $table WHERE id='$part[$i]' AND status='Y'");
+                  if($add_val == "price") $tmp_ops = " - ".$tmp_ops." руб.";
+                  if($add_val == "photo") {
+                        $tmp_ops = photo_name($tmp_ops,"images/pict/");
+                        $tmpl -> setVariable('wh_svva',photo_size($tmp_ops,200,200));
+                  }
+                  $tmpl -> setVariable($add_val."_".$field,$tmp_ops);
+                }
+          }
+          $tmpl -> setVariable("id_".$field,$part[$i]);
+          $tmpl -> setVariable("name_".$field,$name);
+          $tmpl -> parseCurrentBlock("list_".$field);
+        }
+  }
+  RETURN true;
+}
+
+
+// Ћист Faq
+$faq = $db -> getAll("SELECT * FROM faqtov WHERE idtov='$idgoods' ORDER BY id DESC");
+if(!empty($faq)) {
+  foreach($faq as $vals) {
+
+        $tmpl -> setCurrentBlock('list_faq');
+         if($vals[answer]){
+         $vals[admin]="<- јдминистратор:";
+          }else{
+         $vals[admin]="";
+        }
+        $tmpl -> setVariable($vals);
+        $tmpl -> parseCurrentBlock('list_faq');
+  }
+}else{
+        $tmpl -> touchBlock('no_list_faq');
+ }
+ $tmpl -> setVariable("idtov", $idgoods);
+ $val[cid] = $db -> getOne("SELECT cid FROM items WHERE id='$idgoods'");
+ $tmpl -> setVariable("cid", $val[cid]);
+ ?>

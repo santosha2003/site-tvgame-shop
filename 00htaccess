@@ -1,0 +1,3 @@
+#RSUS CharsetSourceEnc windows-1251
+ErrorDocument 404 http://www.shedevr.ru/index.php
+ErrorDocument 403 http://www.shedevr.ru/index.php

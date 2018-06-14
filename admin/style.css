@@ -1,0 +1,31 @@
+.t        {font-family : Tahoma, Verdana, Arial; font-weight : normal; font-size : 8pt}
+.th        {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 9pt; color: #419DF3;}
+.tr        {font-family : Tahoma, Verdana, Arial; font-weight : normal; font-size : 8pt; text-align: right}
+.t2        {font-family : Tahoma, Verdana, Arial; font-weight : normal; font-size :9pt}
+.tb        {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 9pt}
+.ti        {font-family : Tahoma, Verdana, Arial; font-weight : normal; font-style : italic; font-size : 9pt}
+
+
+.title        {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 14pt; color: #419DF3}
+.error        {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 10pt; color: red}
+.warning {font-family : Tahoma, Verdana, Arial; font-weight : normal; color: green; font-size : 10pt}
+
+.active        {background-color:#DEDEDE; padding:0 0.3em; font-weight : bold; font-size : 1.1em;}
+
+td.navi        { background-color: #DEDEDE; }
+td.content1 { background-color: #8a8a8a; }
+
+a {font-family : Tahoma, Verdana, Arial; color: #000000; text-decoration: none; font-size : 9pt; }
+a.navi { color: #000000; text-decoration: none; }
+a.content { color: #B70F18; }
+a:hover { color: #000000; text-decoration: underline overline; }
+
+
+.highlight { color: #B70F18; font-weight: bold; }
+.naviSelected { font-weight: bold; text-decoration: none; }
+font.add {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 11pt; color: #419DF3}
+font.add1 {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 11pt; color: #000000}
+font.info {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 10pt; color: #000000}
+font.view {font-family : Tahoma, Verdana, Arial; font-weight : bold; font-size : 10pt; color: #ff0000}
+ 
+

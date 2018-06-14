@@ -1,0 +1,4 @@
+<Limit ALL>
+        AllowUser shedevr
+        DenyAll
+</Limit> 

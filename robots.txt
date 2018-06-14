@@ -1,0 +1,20 @@
+User-agent: *
+Disallow: /lib
+Disallow: /admin
+Disallow: /images
+Disallow: /display.php
+Disallow: /print.php
+Disallow: /*?print=*
+Disallow: /*?display=*
+Disallow: /*?sh=*
+Disallow: /*?op=linkscatalog*
+Disallow: /*?op=cart
+Disallow: /*?op=reg
+Disallow: /*?idcat=*
+Disallow: /*?from=*
+Disallow: /*linkscatalog=*
+Disallow: /*www_users_ing=*
+Sitemap: http://www.shedevr.ru/sitemap.xml
+Host: www.shedevr.ru
+Crawl-delay: 1.5
+

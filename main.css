@@ -1,0 +1,254 @@
+.no_choice {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #c8c8c8; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.bg_one {
+	BORDER-RIGHT: #cbbf98 1px solid; BORDER-TOP: #cbbf98 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; MARGIN: 2px 2px 5px; BORDER-LEFT: #cbbf98 1px solid; COLOR: #ffffff; BORDER-BOTTOM: #cbbf98 1px solid; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; BACKGROUND-COLOR: #354465; TEXT-DECORATION: none
+}
+.hr_line {
+	COLOR: #96844c
+}
+.h_one {
+	BORDER-RIGHT: #cbbf98 1px solid; BORDER-TOP: #cbbf98 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #475b86; MARGIN: 2px 2px 5px; BORDER-LEFT: #cbbf98 1px solid; COLOR: #ffffff; BORDER-BOTTOM: #cbbf98 1px solid; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.h_2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #475b86; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.h_5 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14pt; COLOR: #e60004; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.t_one {
+	BORDER-RIGHT: #86adfe 1px solid; BORDER-TOP: #86adfe 1px solid; FONT-SIZE: 9pt; BACKGROUND: #86adfe; MARGIN: 2px 2px 5px; BORDER-LEFT: #86adfe 1px solid; COLOR: black; BORDER-BOTTOM: #86adfe 1px solid; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.t_2 {
+	BORDER-RIGHT: #d2c8a7 1px solid; BORDER-TOP: #d2c8a7 1px solid; FONT-SIZE: 9pt; BACKGROUND: #cedefe; MARGIN: 2px 2px 5px; BORDER-LEFT: #d2c8a7 1px solid; COLOR: black; BORDER-BOTTOM: #d2c8a7 1px solid; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.named {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+.number {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.design {
+	FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.cooper {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.header {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+.under {
+	FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+.comment_e {
+	FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.comment {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+.comment_n {
+	FONT-WEIGHT: normal; FONT-SIZE: 9pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+P {
+	FONT-WEIGHT: normal; FONT-SIZE: 9pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 13pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 11pt; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: none
+}
+A {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #475b86; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: underline
+}
+A:active {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #475b86; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: underline
+}
+A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #475b86; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: underline
+}
+A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #475b86; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica; TEXT-DECORATION: underline
+}
+A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #5a73aa; FONT-STYLE: normal; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+TD {
+	FONT-WEIGHT: normal; FONT-SIZE: 9pt; COLOR: #000000; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+B {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+BODY {
+	FONT-SIZE: 9pt; FONT-FAMILY: Arial, sans-serif, Pragmatica
+}
+.t {
+        FONT-WEIGHT: normal; FONT-SIZE: 8pt; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.sm {
+        FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.smb {
+        FONT-WEIGHT: bold; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.tb {
+        FONT-WEIGHT: bold; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.t1 {
+        FONT-WEIGHT: normal; FONT-SIZE: 9pt; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+.title {
+        FONT-WEIGHT: bold; FONT-SIZE: 12pt; COLOR: #000000; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+.white {
+        FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: #ffffff; FONT-FAMILY: Verdana,Tahoma, Arial
+}
+.white2 {
+        FONT-WEIGHT: bold; FONT-SIZE: 10pt; COLOR: #ffffff; FONT-FAMILY: Verdana,Tahoma, Arial
+}
+.wn {
+        FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: Verdana,Tahoma, Arial
+}
+.tit2 {
+        FONT-WEIGHT: bold; FONT-SIZE: 13pt; COLOR: #b92d22; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.tit3 {
+        FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #ffffff; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+
+H1 {
+        FONT-WEIGHT: bold;
+        FONT-SIZE: 13pt;
+        COLOR: #1c5b4a;
+        FONT-FAMILY: Verdana, Tahoma, Arial;
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+}
+
+H2 {
+        FONT-WEIGHT: bold; FONT-SIZE: 12pt; COLOR: #000000; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+.active {
+        PADDING-RIGHT: 0.3em; PADDING-LEFT: 0.3em; FONT-WEIGHT: bold; FONT-SIZE: 1.1em; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; BACKGROUND-COLOR: #dedede
+}
+.form {
+        BORDER-RIGHT: #dfdfdf 1px solid; BORDER-TOP: #dfdfdf 1px solid; FONT-SIZE: 8pt; BORDER-LEFT: #dfdfdf 1px solid; COLOR: #000000; BORDER-BOTTOM: #dfdfdf 1px solid; FONT-FAMILY: Verdana; BACKGROUND-COLOR: #ffffff; TEXT-ALIGN: left
+}
+.knopka {
+        BORDER-RIGHT: #dfdfdf 1px solid; BORDER-TOP: #dfdfdf 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 8pt; BORDER-LEFT: #dfdfdf 1px solid; COLOR: #ffffff; BORDER-BOTTOM: #dfdfdf 1px solid; FONT-FAMILY: Verdana; BACKGROUND-COLOR: #d30000; TEXT-ALIGN: center
+}
+.gr {
+        FONT-WEIGHT: normal; FONT-SIZE: 7pt; COLOR: #818080; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.red {
+        FONT-WEIGHT: normal; FONT-SIZE: 7pt; COLOR: #c80000; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+.green {
+        FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: #2d6354; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+A:link {
+        COLOR: #0057a9; TEXT-DECORATION: none
+}
+A:visited {
+        COLOR: #0057a9; TEXT-DECORATION: none
+}
+A:active {
+        COLOR: #0057a9; TEXT-DECORATION: none
+}
+A:hover {
+        COLOR: #2683da; TEXT-DECORATION: underline
+}
+A.menu:link {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.menu:visited {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.menu:active {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.menu:hover {
+        COLOR: #ffffff; TEXT-DECORATION: underline
+}
+A.w:link {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.w:visited {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.w:active {
+        COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.w:hover {
+        COLOR: #ffe1e1; TEXT-DECORATION: underline
+}
+A.b:link {
+        COLOR: #000000; TEXT-DECORATION: none
+}
+A.b:visited {
+        COLOR: #000000; TEXT-DECORATION: none
+}
+A.b:active {
+        COLOR: #000000; TEXT-DECORATION: none
+}
+A.b:hover {
+        COLOR: #d30000; TEXT-DECORATION: none
+}
+A.r:link {
+        COLOR: #d30000; TEXT-DECORATION: none
+}
+A.r:visited {
+        COLOR: #d30000; TEXT-DECORATION: none
+}
+A.r:active {
+        COLOR: #d30000; TEXT-DECORATION: none
+}
+A.r:hover {
+        COLOR: #d30000; TEXT-DECORATION: underline
+}
+A.g:link {
+        COLOR: #316303; TEXT-DECORATION: none
+}
+A.g:visited {
+        COLOR: #316303; TEXT-DECORATION: none
+}
+A.g:active {
+        COLOR: #316303; TEXT-DECORATION: none
+}
+A.g:hover {
+        COLOR: #316303; TEXT-DECORATION: underline
+}
+A.d:link {
+        COLOR: #000000; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.d:visited {
+        COLOR: #000000; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.d:active {
+        COLOR: #000000; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.d:hover {
+        COLOR: #000000; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: underline }
+
+A.gl:link {
+        COLOR: #2D6354; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.gl:visited {
+        COLOR: #2D6354; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.gl:active {
+        COLOR: #2D6354; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: none
+}
+A.gl:hover {
+        COLOR: #2D6354; FONT-WEIGHT: normal; FONT-SIZE: 7pt; FONT-FAMILY: Verdana, Tahoma, Arial; TEXT-DECORATION: underline }
+
+font.part {
+        FONT-WEIGHT: bold; FONT-SIZE: 9pt; COLOR: #ffffff; FONT-FAMILY: Arial, Verdana, Tahoma
+}
+font.partmin {
+        FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+font.partvid {
+        FONT-SIZE: 8pt; COLOR: #006d00; FONT-FAMILY: Verdana, Tahoma, Arial
+}
+
