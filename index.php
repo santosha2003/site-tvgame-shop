@@ -108,7 +108,7 @@ if (!isset ($_GET['op'])) $_GET['op']="";
         $tmpl->setVariable('title',$row." - ");
         $tmpl->setVariable('supertitle',$rows);
         } else {
-  $tmpl->setVariable('title',"Игровые приставки и картриджи, денди, сега, живопись по номерам, алмазная вышивка, скрапбукинг");
+  $tmpl->setVariable('title',"Шедевр магазин игровых приставок и картриджей, живописи по номерам, алмазной вышивки, скрапбукинга");
 
         }
 

@@ -215,7 +215,14 @@ function ValidData(form) {
         alert(missinginfo);
         return false;
   }
-  else return true;
+
+  else
+    oksubmit ="ОФОРМЛЕН ЗАКАЗ \n(8 499)158-65-11, режим работы операторов - с 9 до 19 часов с понедельника по
+пятницу.\n" +
+
+    alert(oksubmit);
+
+ return true;
 }
 -->
 </script>

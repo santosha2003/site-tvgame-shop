@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('./lib/configd.php');
 $petia = 5;
 session_register('petia');

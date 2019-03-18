@@ -1,6 +1,6 @@
 <?php
 //require_once("../lib/config_admin.php");
-require_once("../lib/config.php");
+require_once("../lib/config_admin.php");
 session_start ();   //php5.6 + init _SESSION var`s
 //break auth session
 //HTTP_Session2::start('shop_adm', uniqid('MyID'));

@@ -2,13 +2,6 @@
 require_once("./lib/config.php");
 require_once("./lib/shoppingcart.php");
 
-//if (!$a->getAuth()) {
-//  $_SESSION['www_users_ing'][op] = 'order_snx1';
-//  header("Location: index.php?op=reg");
-//  exit;
-// }
-
-
 $cart = new Cart;
 $content = $cart -> display_contents();
 
