@@ -9,7 +9,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: ChannelFile.php,v 1.84 2009/03/09 01:03:51 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -146,7 +145,7 @@ $GLOBALS['_PEAR_CHANNELS_MIRROR_TYPES'] =  array('server');
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.8.1
+ * @version    Release: 1.10.6
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -194,9 +193,9 @@ class PEAR_ChannelFile
      */
     var $_isValid = false;
 
-    function PEAR_ChannelFile()
+    function __construct()
     {
-        $this->_stack = &new PEAR_ErrorStack('PEAR_ChannelFile');
+        $this->_stack = new PEAR_ErrorStack('PEAR_ChannelFile');
         $this->_stack->setErrorMessageTemplate($this->_getErrorMessage());
         $this->_isValid = false;
     }
@@ -306,11 +305,12 @@ class PEAR_ChannelFile
 
     /**
      * @param array
-     * @static
+     *
      * @return PEAR_ChannelFile|false false if invalid
      */
-    function &fromArray($data, $compatibility = false, $stackClass = 'PEAR_ErrorStack')
-    {
+    public static function &fromArray(
+        $data, $compatibility = false, $stackClass = 'PEAR_ErrorStack'
+    ) {
         $a = new PEAR_ChannelFile($compatibility, $stackClass);
         $a->_fromArray($data);
         if (!$a->validate()) {
@@ -322,13 +322,14 @@ class PEAR_ChannelFile
 
     /**
      * Unlike {@link fromArray()} this does not do any validation
+     *
      * @param array
-     * @static
+     *
      * @return PEAR_ChannelFile
      */
-    function &fromArrayWithErrors($data, $compatibility = false,
-                                  $stackClass = 'PEAR_ErrorStack')
-    {
+    public static function &fromArrayWithErrors(
+        $data, $compatibility = false, $stackClass = 'PEAR_ErrorStack'
+    ) {
         $a = new PEAR_ChannelFile($compatibility, $stackClass);
         $a->_fromArray($data);
         return $a;
@@ -498,12 +499,15 @@ class PEAR_ChannelFile
     function _makeRestXml($info, $indent)
     {
         $ret = $indent . "<rest>\n";
-        if (!isset($info['baseurl'][0])) {
+        if (isset($info['baseurl']) && !isset($info['baseurl'][0])) {
             $info['baseurl'] = array($info['baseurl']);
         }
-        foreach ($info['baseurl'] as $url) {
-            $ret .= "$indent <baseurl type=\"" . $url['attribs']['type'] . "\"";
-            $ret .= ">" . $url['_content'] . "</baseurl>\n";
+
+        if (isset($info['baseurl'])) {
+            foreach ($info['baseurl'] as $url) {
+                $ret .= "$indent <baseurl type=\"" . $url['attribs']['type'] . "\"";
+                $ret .= ">" . $url['_content'] . "</baseurl>\n";
+            }
         }
         $ret .= $indent . "</rest>\n";
         return $ret;
@@ -687,15 +691,17 @@ class PEAR_ChannelFile
         if (!isset($functions[0])) {
             $functions = array($functions);
         }
+
         foreach ($functions as $function) {
             if (!isset($function['_content']) || empty($function['_content'])) {
                 $this->_validateError(PEAR_CHANNELFILE_ERROR_NO_FUNCTIONNAME,
                     array('parent' => $parent, 'protocol' => $protocol));
             }
+
             if ($protocol == 'rest') {
                 if (!isset($function['attribs']['type']) ||
                       empty($function['attribs']['type'])) {
-                    $this->_validateError(PEAR_CHANNELFILE_ERROR_NO_BASEURLTYPE,
+                    $this->_validateError(PEAR_CHANNELFILE_ERROR_NOBASEURLTYPE,
                         array('parent' => $parent, 'protocol' => $protocol));
                 }
             } else {
@@ -1019,6 +1025,14 @@ class PEAR_ChannelFile
         switch ($version) {
             case '1.0' :
                 $this->resetREST($mirror);
+
+                if (!isset($this->_channelInfo['servers'])) {
+                    $this->_channelInfo['servers'] = array('primary' =>
+                        array('rest' => array()));
+                } elseif (!isset($this->_channelInfo['servers']['primary'])) {
+                    $this->_channelInfo['servers']['primary'] = array('rest' => array());
+                }
+
                 return true;
             break;
             default :
@@ -1488,7 +1502,7 @@ class PEAR_ChannelFile
         if (isset($this->_channelInfo['validatepackage'])) {
             if ($package == $this->_channelInfo['validatepackage']) {
                 // channel validation packages are always validated by PEAR_Validate
-                $val = &new PEAR_Validate;
+                $val = new PEAR_Validate;
                 return $val;
             }
 
@@ -1500,7 +1514,7 @@ class PEAR_ChannelFile
                         $this->_channelInfo['validatepackage']['_content']) . '.php';
                     $vclass = str_replace('.', '_',
                         $this->_channelInfo['validatepackage']['_content']);
-                    $val = &new $vclass;
+                    $val = new $vclass;
                 } else {
                     $a = false;
                     return $a;
@@ -1508,10 +1522,10 @@ class PEAR_ChannelFile
             } else {
                 $vclass = str_replace('.', '_',
                     $this->_channelInfo['validatepackage']['_content']);
-                $val = &new $vclass;
+                $val = new $vclass;
             }
         } else {
-            $val = &new PEAR_Validate;
+            $val = new PEAR_Validate;
         }
 
         return $val;

@@ -19,7 +19,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: SOAP5.php,v 1.9 2007/07/02 08:25:41 aashley Exp $
+ * @version    CVS: $Id$
  * @since      File available since Release 1.4.0
  */
 
@@ -101,7 +101,7 @@ require_once "PEAR.php";
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.9 $
+ * @version    Release: @package_version@  File: $Revision$
  * @since      Class available since Release 1.4.0
  */
 class Auth_Container_SOAP5 extends Auth_Container

@@ -1,4 +1,4 @@
-<?
+<?php
 class FormProc {  
 
 function add($table,$missing,$insert='') {

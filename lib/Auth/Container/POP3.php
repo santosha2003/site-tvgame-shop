@@ -20,7 +20,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: POP3.php,v 1.12 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.2.0
  */
@@ -48,7 +48,7 @@ require_once 'Net/POP3.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.12 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.2.0
  */
@@ -128,7 +128,7 @@ class Auth_Container_POP3 extends Auth_Container
     function fetchData($username, $password)
     {
         $this->log('Auth_Container_POP3::fetchData() called.', AUTH_LOG_DEBUG);
-        $pop3 =& new Net_POP3();
+        $pop3 = new Net_POP3();
         $res = $pop3->connect($this->server, $this->port, $this->method);
         if (!$res) {
             $this->log('Connection to POP3 server failed.', AUTH_LOG_DEBUG);
@@ -142,4 +142,3 @@ class Auth_Container_POP3 extends Auth_Container
     // }}}
 
 }
-?>

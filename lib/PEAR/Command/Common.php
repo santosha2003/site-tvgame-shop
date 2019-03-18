@@ -10,7 +10,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Common.php,v 1.39 2009/02/24 23:39:29 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -29,7 +28,7 @@ require_once 'PEAR.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.8.1
+ * @version    Release: 1.10.6
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -81,9 +80,9 @@ class PEAR_Command_Common extends PEAR
      *
      * @access public
      */
-    function PEAR_Command_Common(&$ui, &$config)
+    function __construct(&$ui, &$config)
     {
-        parent::PEAR();
+        parent::__construct();
         $this->config = &$config;
         $this->ui = &$ui;
     }
@@ -144,7 +143,7 @@ class PEAR_Command_Common extends PEAR
         }
 
         reset($this->commands[$command]['options']);
-        while (list($option, $info) = each($this->commands[$command]['options'])) {
+        foreach ($this->commands[$command]['options'] as $option => $info) {
             $larg = $sarg = '';
             if (isset($info['arg'])) {
                 if ($info['arg']{0} == '(') {

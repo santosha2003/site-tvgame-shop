@@ -20,7 +20,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: SAP.php,v 1.5 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.4.0
  */
@@ -48,7 +48,7 @@ require_once 'PEAR.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.5 $
+ * @version    Release: @package_version@  File: $Revision$
  * @since      Class available since Release 1.4.0
  */
 class Auth_Container_SAP extends Auth_Container {
@@ -127,7 +127,7 @@ class Auth_Container_SAP extends Auth_Container {
             if ($error['message']) {
                 $message .= ': ' . $error['message'];
             }
-            PEAR::raiseError($message, null, null, null, @$erorr['all']);
+            PEAR::raiseError($message, null, null, null, @$error['all']);
             return false;
         } else {
             if (!empty($this->options['GETSSO2'])) {
@@ -165,7 +165,7 @@ class Auth_Container_SAP extends Auth_Container {
         }
         $err = explode("n", $sap_error);
         foreach ($err AS $line) {
-            $item = split(':', $line);
+            $item = explode(':', $line);
             $error[strtolower(trim($item[0]))] = trim($item[1]);
         }
         $error['all'] = $sap_error;

@@ -41,7 +41,7 @@
  * @author   Alexander Radivaniovich <info@wwwlab.net>
  * @author   Tony Bibbs <tony@geeklog.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id: Container.php,v 1.9 2008/02/02 22:26:36 till Exp $
+ * @version  CVS: $Id$
  * @link     http://pear.php.net/package/HTTP_Session2
  */
 
@@ -64,6 +64,13 @@ require_once 'HTTP/Session2/Container/Interface.php';
 abstract class HTTP_Session2_Container implements HTTP_Session2_Container_Interface
 {
     /**
+     * @var int $time A timestamp.
+     * @see parent::write()
+     * @see self::getTime()
+     * @see self::setTime()
+     */
+    protected $time;
+    /**
      * Additional options for the container object
      *
      * @var array
@@ -83,6 +90,16 @@ abstract class HTTP_Session2_Container implements HTTP_Session2_Container_Interf
         if (is_array($options)) {
             $this->parseOptions($options);
         }
+    }
+
+    /**
+     * Call session_write_close() in destructor for compatibility with PHP >= 5.0.5
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        session_write_close();
     }
 
     /**
@@ -117,12 +134,47 @@ abstract class HTTP_Session2_Container implements HTTP_Session2_Container_Interf
      */
     public function set()
     {
-        session_module_name('user');
+      // session_module_name();  // php7.2 'user' module name prohibited
         session_set_save_handler(array($this, 'open'),
             array($this, 'close'),
             array($this, 'read'),
             array($this, 'write'),
             array($this, 'destroy'),
             array($this, 'gc'));
+    }
+
+    /**
+     * Return either {@link self::$time} or time().
+     *
+     * @return int
+     * @see    parent::write()
+     */
+    public function getTime()
+    {
+        if ($this->time === null) {
+            $this->time = time();
+        }
+        return $this->time;
+    }
+
+    /**
+     * Override the time(). This is great for unit testing.
+     *
+     * @return $this
+     * @throws HTTP_Session2_Exception When $time is not an int.
+     * @uses   self::$time
+     * @see    parent::write()
+     * @see    self::getTime()
+     */
+    public function setTime($time)
+    {
+        if (is_int($time)) {
+            throw new HTTP_Session2_Exception(
+                '$time should be an integer.',
+                HTTP_Session2::ERR_INVALID_ARGUMENT
+            );
+        }
+        $this->time = $time;
+        return $this;
     }
 }

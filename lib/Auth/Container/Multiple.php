@@ -17,7 +17,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: Multiple.php,v 1.4 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @since      File available since Release 1.5.0
  */
 
@@ -73,7 +73,7 @@ require_once "PEAR.php";
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.4 $
+ * @version    Release: @package_version@  File: $Revision$
  * @since      File available since Release 1.5.0
  */
 
@@ -159,7 +159,7 @@ class Auth_Container_Multiple extends Auth_Container {
 
             if (PEAR::isError($result)) {
 
-                $this->log('Container '.$key.': '.$result->getMessage(), AUTH_LOG_ERR);
+                $this->log('Container '.$key.': '.$result->getMessage(), AUTH_LOG_DEBUG);
                 return $result;
 
             } elseif ($result == true) {
@@ -185,4 +185,3 @@ class Auth_Container_Multiple extends Auth_Container {
 
 }
 
-?>

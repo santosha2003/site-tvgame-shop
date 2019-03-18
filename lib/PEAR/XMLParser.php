@@ -10,7 +10,6 @@
  * @author     Stephan Schmidt (original XML_Unserializer code)
  * @copyright  1997-2009 The Authors
  * @license   http://opensource.org/licenses/bsd-license New BSD License
- * @version    CVS: $Id: XMLParser.php,v 1.22 2009/03/08 00:45:39 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -23,7 +22,7 @@
  * @author    Stephan Schmidt (original XML_Unserializer code)
  * @copyright 1997-2009 The Authors
  * @license   http://opensource.org/licenses/bsd-license New BSD License
- * @version   Release: 1.8.1
+ * @version   Release: 1.10.6
  * @link      http://pear.php.net/package/PEAR
  * @since     Class available since Release 1.4.0a1
  */
@@ -45,13 +44,13 @@ class PEAR_XMLParser
      * stack for all data that is found
      * @var array    $_dataStack
      */
-    var $_dataStack  =   array();
+    var $_dataStack = array();
 
     /**
      * stack for all values that are generated
      * @var array    $_valStack
      */
-    var $_valStack  =   array();
+    var $_valStack = array();
 
     /**
      * current tag depth
@@ -83,8 +82,7 @@ class PEAR_XMLParser
             include_once 'PEAR.php';
             return PEAR::raiseError("XML Extension not found", 1);
         }
-        $this->_valStack = array();
-        $this->_dataStack = array();
+        $this->_dataStack =  $this->_valStack = array();
         $this->_depth = 0;
 
         if (
@@ -94,10 +92,6 @@ class PEAR_XMLParser
             || strpos($data, "encoding='utf-8'")
         ) {
             $this->encoding = 'UTF-8';
-        }
-
-        if (version_compare(phpversion(), '5.0.0', 'lt') && $this->encoding == 'UTF-8') {
-            $data = utf8_decode($data);
         }
 
         $xp = xml_parser_create($this->encoding);
@@ -127,25 +121,21 @@ class PEAR_XMLParser
      */
     function startHandler($parser, $element, $attribs)
     {
-        $type = 'string';
-
         $this->_depth++;
         $this->_dataStack[$this->_depth] = null;
 
         $val = array(
-                     'name'         => $element,
-                     'value'        => null,
-                     'type'         => $type,
-                     'childrenKeys' => array(),
-                     'aggregKeys'   => array()
-                    );
+            'name'         => $element,
+            'value'        => null,
+            'type'         => 'string',
+            'childrenKeys' => array(),
+            'aggregKeys'   => array()
+       );
 
         if (count($attribs) > 0) {
             $val['children'] = array();
             $val['type'] = 'array';
-
             $val['children']['attribs'] = $attribs;
-
         }
 
         array_push($this->_valStack, $val);
@@ -176,18 +166,14 @@ class PEAR_XMLParser
         $data  = $this->postProcess($this->_dataStack[$this->_depth], $element);
 
         // adjust type of the value
-        switch(strtolower($value['type'])) {
-
+        switch (strtolower($value['type'])) {
             // unserialize an array
             case 'array':
                 if ($data !== '') {
                     $value['children']['_content'] = $data;
                 }
-                if (isset($value['children'])) {
-                    $value['value'] = $value['children'];
-                } else {
-                    $value['value'] = array();
-                }
+
+                $value['value'] = isset($value['children']) ? $value['children'] : array();
                 break;
 
             /*

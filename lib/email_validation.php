@@ -1,4 +1,4 @@
-<?
+<?php
 class email_validation_class {
 	var $email_regular_expression="^([-!#\$%&'*+./0-9=?A-Z^_`a-z{|}~])+@([-!#\$%&'*+/0-9=?A-Z^_`a-z{|}~]+\\.)+[a-zA-Z]{2,6}\$";
 	var $timeout=0;

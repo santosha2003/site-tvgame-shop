@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: DBLite.php,v 1.20 2008/04/04 07:57:02 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.3.0
  */
@@ -45,7 +45,7 @@ require_once 'DB.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.20 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.3.0
  */
@@ -120,15 +120,16 @@ class Auth_Container_DBLite extends Auth_Container
     {
         $this->log('Auth_Container_DBLite::_connect() called.', AUTH_LOG_DEBUG);
         if (is_string($dsn) || is_array($dsn)) {
-            $this->db =& DB::connect($dsn, $this->options['db_options']);
+            $this->db = DB::connect($dsn, $this->options['db_options']);
         } elseif (is_subclass_of($dsn, "db_common")) {
-            $this->db =& $dsn;
+            $this->db = $dsn;
         } else {
             return PEAR::raiseError("Invalid dsn or db object given");
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode());
+            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode(),
+                                    null, null, $this->db->getUserInfo());
         } else {
             return true;
         }
@@ -250,7 +251,8 @@ class Auth_Container_DBLite extends Auth_Container
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         // Find if db_fields contains a *, if so assume all col are selected
@@ -281,7 +283,8 @@ class Auth_Container_DBLite extends Auth_Container
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         }
         if (!is_array($res)) {
             $this->activeUser = '';

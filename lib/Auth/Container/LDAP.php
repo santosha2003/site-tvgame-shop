@@ -19,7 +19,7 @@
  * @author     Hugues Peeters <hugues.peeters@claroline.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: LDAP.php,v 1.43 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  */
 
@@ -197,7 +197,7 @@ require_once "PEAR.php";
  * @author     Hugues Peeters <hugues.peeters@claroline.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.43 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  */
 class Auth_Container_LDAP extends Auth_Container

@@ -1,4 +1,4 @@
-<?
+<?php
 class SDImageUploading {
 	var $disk_path;
 	var $new_uimage_name;

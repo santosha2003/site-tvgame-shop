@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: Anonymous.php 289651 2009-10-15 04:39:07Z aashley $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.3.0
  */
@@ -40,7 +40,7 @@ require_once 'Auth.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: @package_version@  File: $Revision: 289651 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.3.0
  */

@@ -4,10 +4,10 @@
  *
  * Base exception class for HTTP_Session2
  *
- * Copyright (c) 2007, Till Klampaeckel
+ * Copyright (c) 2007-2011, Till Klampaeckel
  *
  * All rights reserved.
-
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
@@ -38,7 +38,7 @@
  * @package  HTTP_Session2
  * @author   Till Klampaeckel <till@php.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id: Exception.php,v 1.5 2007/11/26 06:08:32 till Exp $
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/HTTP_Session2
  */
 
@@ -53,13 +53,59 @@ require_once 'PEAR/Exception.php';
  *
  * PHP version 5
  *
- * @category HTTP
- * @package  HTTP_Session2
- * @author   Till Klampaeckel <till@php.net>
- * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  Release: @package_version@
- * @link     http://pear.php.net/package/HTTP_Session2
+ * @category   HTTP
+ * @package    HTTP_Session2
+ * @author     Till Klampaeckel <till@php.net>
+ * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version    Release: @package_version@
+ * @link       http://pear.php.net/package/HTTP_Session2
+ * @deprecated PEAR_Exception is deprecated for 0.9.0
  */
 class HTTP_Session2_Exception extends PEAR_Exception
 {
+    /**
+     * @var array $exceptionStack To add an exception, when we re-throw.
+     */
+    protected $exceptionStack = array();
+
+    /**
+     * __construct
+     *
+     * @param string $message   An error message.
+     * @param mixed  $code      An error code.
+     * @param mixed  $exception The previous exception, when we re-throw [optional]
+     *
+     * @uses parent::__construct()
+     * @uses self::$exceptionStack
+     */
+    public function __construct($message, $code = null, $exception = null)
+    {
+        if ($exception !== null) {
+            array_push($this->exceptionStack, $exception);
+        }
+        parent::__construct($message, $code);
+    }
+
+    /**
+     * __toString() implementation for lazy coders like me :)
+     *
+     * @return string
+     * @uses   parent::$message
+     * @uses   parent::$code
+     */
+    public function __toString()
+    {
+        return "{$this->message} Code: {$this->code}"; 
+    }
+
+    /**
+     * Return all stacked exceptions
+     *
+     * @return array
+     * @uses   self::$exceptionStack
+     */
+    public function getExceptionStack()
+    {
+        return $this->exceptionStack;
+    }
 }

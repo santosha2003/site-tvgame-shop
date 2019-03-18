@@ -1,14 +1,16 @@
 <?php
-ini_set('include_path',':/var/www/shedevr/lib');
+ini_set('include_path',':/var/www/shedevr/lib:/usr/local/share/pear');
 ini_set('log_errors', 1); 
-ini_set('error_log','/var/www/shedevradm_error_log.txt'); 
+ini_set('error_log','/var/www/shedevr/adm_error_log.txt'); 
 ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 header('Content-Type: text/html; charset=windows-1251', true);
-$_SERVER['HTTP_HOST'] = 'shedevr.ru';
-$_SERVER['SERVER_NAME'] = 'shedevr.ru';
+$_SERVER['HTTP_HOST'] = 'santoshapro.me:92';
+$_SERVER['SERVER_NAME'] = 'santoshapro.me:92';
 
 $shop_true_id = '1';
+
+//print_r ($_SERVER);
 
 require_once 'PEAR.php';
 require_once 'DB.php';
@@ -25,10 +27,10 @@ $tmpl = new HTML_Template_IT("./templates");  //.admin/templates
 
 $dbhost = "localhost";
 $dbport = "3306";
-$dbuname = "shedevr_ru";
-$dbpass = "S2m5rf3";
+$dbuname = "mysqluser";
+$dbpass = "mysqlpass";
 $dbname = "shedevr_ru";
-$dbtype = "mysql";
+$dbtype = "mysqli";
 $dsn = "$dbtype://$dbuname:$dbpass@$dbhost:$dbport/$dbname";
 
 define(DEBUG_ENV, true);
@@ -48,7 +50,7 @@ $db->setFetchMode(DB_FETCHMODE_ASSOC);
 //mysql_query("SET NAMES 'utf-8'");
 //mysql_query("SET NAMES 'cp1251'");
 //mysql_query("SET CHARACTER SET 'cp1251'");
-mysql_set_charset("cp1251");
+//mysql_set_charset("cp1251");
 
 //php5.6+ $_SESSION
 //session_start();

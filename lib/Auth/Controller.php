@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: Controller.php 237449 2007-06-12 03:11:27Z aashley $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.3.0
  */
@@ -54,7 +54,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: @package_version@  File: $Revision: 237449 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.3.0
  */
@@ -106,7 +106,7 @@ class Auth_Controller
      */
     function Auth_Controller(&$auth_obj, $login='login.php', $default='index.php', $accessList=array())
     {
-        $this->auth =& $auth_obj;
+        $this->auth = $auth_obj;
         $this->_loginPage = $login;
         $this->_defaultPage = $default;
         @session_start();

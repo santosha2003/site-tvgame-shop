@@ -12,7 +12,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Channels.php,v 1.64 2009/02/24 23:39:29 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -32,7 +31,7 @@ define('PEAR_COMMAND_CHANNELS_CHANNEL_EXISTS', -500);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.8.1
+ * @version    Release: 1.10.6
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -154,10 +153,11 @@ operations on the remote server.',
             'shortcut' => 'clo',
             'function' => 'doLogout',
             'options' => array(),
-            'doc' => '
-Logs out from the remote server.  This command does not actually
-connect to the remote server, it only deletes the stored username and
-password from your user configuration.',
+            'doc' => '<channel name>
+Logs out from a remote channel server.  If <channel name> is not supplied,
+the default channel is used. This command does not actually connect to the
+remote server, it only deletes the stored username and password from your user
+configuration.',
             ),
         );
 
@@ -166,9 +166,9 @@ password from your user configuration.',
      *
      * @access public
      */
-    function PEAR_Command_Channels(&$ui, &$config)
+    function __construct(&$ui, &$config)
     {
-        parent::PEAR_Command_Common($ui, $config);
+        parent::__construct($ui, $config);
     }
 
     function _sortChannels($a, $b)
@@ -185,11 +185,12 @@ password from your user configuration.',
         $data = array(
             'caption' => 'Registered Channels:',
             'border' => true,
-            'headline' => array('Channel', 'Summary')
+            'headline' => array('Channel', 'Alias', 'Summary')
             );
         foreach ($registered as $channel) {
             $data['data'][] = array($channel->getName(),
-                                      $channel->getSummary());
+                                    $channel->getAlias(),
+                                    $channel->getSummary());
         }
 
         if (count($registered) === 0) {
@@ -672,7 +673,7 @@ password from your user configuration.',
             return $this->raiseError('No channel alias specified');
         }
 
-        if (count($params) !== 2) {
+        if (count($params) !== 2 || (!empty($params[1]) && $params[1]{0} == '-')) {
             return $this->raiseError(
                 'Invalid format, correct is: channel-alias channel alias');
         }
@@ -693,7 +694,7 @@ password from your user configuration.',
                 'already aliased to "' . strtolower($params[1]) . '", cannot re-alias');
         }
 
-        $chan = &$reg->getChannel($params[0]);
+        $chan = $reg->getChannel($params[0]);
         if (PEAR::isError($chan)) {
             return $this->raiseError('Corrupt registry?  Error retrieving channel "' . $params[0] .
                 '" information (' . $chan->getMessage() . ')');
@@ -862,16 +863,19 @@ password from your user configuration.',
     function doLogout($command, $options, $params)
     {
         $reg     = &$this->config->getRegistry();
-        $channel = $this->config->get('default_channel');
+
+        // If a parameter is supplied, use that as the channel to log in to
+        $channel = isset($params[0]) ? $params[0] : $this->config->get('default_channel');
+
         $chan    = $reg->getChannel($channel);
         if (PEAR::isError($chan)) {
             return $this->raiseError($chan);
         }
 
-        $server = $this->config->get('preferred_mirror');
+        $server = $this->config->get('preferred_mirror', null, $channel);
         $this->ui->outputData("Logging out from $server.", $command);
-        $this->config->remove('username');
-        $this->config->remove('password');
+        $this->config->remove('username', 'user', $channel);
+        $this->config->remove('password', 'user', $channel);
         $this->config->store();
         return true;
     }

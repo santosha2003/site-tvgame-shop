@@ -21,7 +21,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: File.php,v 1.25 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  */
 
@@ -52,7 +52,7 @@ require_once "PEAR.php";
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.25 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  */
 class Auth_Container_File extends Auth_Container
@@ -105,10 +105,10 @@ class Auth_Container_File extends Auth_Container
      * @param   string  password
      * @return  mixed   boolean|PEAR_Error
      */
-    function fetchData($user, $pass)
+        function fetchData($username, $password, $isChallengeResponse=false)
     {
         $this->log('Auth_Container_File::fetchData() called.', AUTH_LOG_DEBUG);
-        return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass);
+        return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass, $this->options['mode']);
     }
 
     // }}}
@@ -133,6 +133,7 @@ class Auth_Container_File extends Auth_Container
             return array();
         }
 
+        $retVal = array();
         foreach ($users as $key => $value) {
             $retVal[] = array("username" => $key,
                               "password" => $value['passwd'],
@@ -288,6 +289,7 @@ class Auth_Container_File extends Auth_Container
     function _setDefaults()
     {
         $this->options['type']       = 'Cvs';
+        $this->options['mode']      = '';
     }
 
     // }}}

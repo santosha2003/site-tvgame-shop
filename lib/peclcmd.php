@@ -1,4 +1,4 @@
-<?php
+<?php dl('pcre.so'); dl('xml.so');
 /**
  * PEAR, the PHP Extension and Application Repository
  *

@@ -12,7 +12,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Package.php,v 1.133 2009/03/25 02:15:57 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -32,7 +31,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: @package_version@
+ * @version    Release: 1.10.6
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -134,6 +133,39 @@ Using the -r or -R option you may compare the current code with that
 of a specific release.
 ',
             ),
+         'svntag' => array(
+             'summary' => 'Set SVN Release Tag',
+             'function' => 'doSvnTag',
+             'shortcut' => 'sv',
+             'options' => array(
+                 'quiet' => array(
+                     'shortopt' => 'q',
+                     'doc' => 'Be quiet',
+                     ),
+                 'slide' => array(
+                     'shortopt' => 'F',
+                     'doc' => 'Move (slide) tag if it exists',
+                     ),
+                 'delete' => array(
+                     'shortopt' => 'd',
+                     'doc' => 'Remove tag',
+                     ),
+                 'dry-run' => array(
+                     'shortopt' => 'n',
+                     'doc' => 'Don\'t do anything, just pretend',
+                     ),
+                 ),
+             'doc' => '<package.xml> [files...]
+ Sets a SVN tag on all files in a package.  Use this command after you have
+ packaged a distribution tarball with the "package" command to tag what
+ revisions of what files were in that release.  If need to fix something
+ after running svntag once, but before the tarball is released to the public,
+ use the "slide" option to move the release tag.
+
+ to include files (such as a second package.xml, or tests not included in the
+ release), pass them as additional parameters.
+ ',
+             ),
         'cvstag' => array(
             'summary' => 'Set CVS Release Tag',
             'function' => 'doCvsTag',
@@ -176,8 +208,9 @@ release), pass them as additional parameters.
             'function' => 'doPackageDependencies',
             'shortcut' => 'pd',
             'options' => array(),
-            'doc' => '
-List all dependencies the package has.'
+            'doc' => '<package-file> or <package.xml> or <install-package-name>
+List all dependencies the package has.
+Can take a tgz / tar file, package.xml or a package name of an installed package.'
             ),
         'sign' => array(
             'summary' => 'Sign a package distribution file',
@@ -249,9 +282,9 @@ used for automated conversion or learning the format.
      *
      * @access public
      */
-    function PEAR_Command_Package(&$ui, &$config)
+    function __construct(&$ui, &$config)
     {
-        parent::PEAR_Command_Common($ui, $config);
+        parent::__construct($ui, $config);
     }
 
     function _displayValidationResults($err, $warn, $strict = false)
@@ -276,11 +309,11 @@ used for automated conversion or learning the format.
         if (!class_exists('PEAR_Packager')) {
             require_once 'PEAR/Packager.php';
         }
-        $a = &new PEAR_Packager;
+        $a = new PEAR_Packager;
         return $a;
     }
 
-    function &getPackageFile($config, $debug = false, $tmpdir = null)
+    function &getPackageFile($config, $debug = false)
     {
         if (!class_exists('PEAR_Common')) {
             require_once 'PEAR/Common.php';
@@ -288,7 +321,7 @@ used for automated conversion or learning the format.
         if (!class_exists('PEAR_PackageFile')) {
             require_once 'PEAR/PackageFile.php';
         }
-        $a = &new PEAR_PackageFile($config, $debug, $tmpdir);
+        $a = new PEAR_PackageFile($config, $debug);
         $common = new PEAR_Common;
         $common->ui = $this->ui;
         $a->setLogger($common);
@@ -338,7 +371,7 @@ used for automated conversion or learning the format.
             $info = $obj->fromPackageFile($params[0], PEAR_VALIDATE_NORMAL);
         } else {
             $archive = $info->getArchiveFile();
-            $tar = &new Archive_Tar($archive);
+            $tar = new Archive_Tar($archive);
             $tar->extract(dirname($info->getPackageFile()));
             $info->setPackageFile(dirname($info->getPackageFile()) . DIRECTORY_SEPARATOR .
                 $info->getPackage() . '-' . $info->getVersion() . DIRECTORY_SEPARATOR .
@@ -372,6 +405,221 @@ used for automated conversion or learning the format.
         }
 
         $this->_displayValidationResults($err, $warn);
+        $this->ui->outputData($this->output, $command);
+        return true;
+    }
+
+    function doSvnTag($command, $options, $params)
+    {
+        $this->output = '';
+        $_cmd = $command;
+        if (count($params) < 1) {
+            $help = $this->getHelp($command);
+            return $this->raiseError("$command: missing parameter: $help[0]");
+        }
+
+        $packageFile = realpath($params[0]);
+        $dir = dirname($packageFile);
+        $dir = substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1);
+        $obj  = &$this->getPackageFile($this->config, $this->_debug);
+        $info = $obj->fromAnyFile($packageFile, PEAR_VALIDATE_NORMAL);
+        if (PEAR::isError($info)) {
+            return $this->raiseError($info);
+        }
+
+        $err = $warn = array();
+        if (!$info->validate()) {
+            foreach ($info->getValidationWarnings() as $error) {
+                if ($error['level'] == 'warning') {
+                    $warn[] = $error['message'];
+                } else {
+                    $err[] = $error['message'];
+                }
+            }
+        }
+
+        if (!$this->_displayValidationResults($err, $warn, true)) {
+            $this->ui->outputData($this->output, $command);
+            return $this->raiseError('SVN tag failed');
+        }
+
+        $version    = $info->getVersion();
+        $package    = $info->getName();
+        $svntag     = "$package-$version";
+
+        if (isset($options['delete'])) {
+            return $this->_svnRemoveTag($version, $package, $svntag, $packageFile, $options);
+        }
+
+        $path = $this->_svnFindPath($packageFile);
+
+        // Check if there are any modified files
+        $fp = popen('svn st --xml ' . dirname($packageFile), "r");
+        $out = '';
+        while ($line = fgets($fp, 1024)) {
+            $out .= rtrim($line)."\n";
+        }
+        pclose($fp);
+
+        if (!isset($options['quiet']) && strpos($out, 'item="modified"')) {
+            $params = array(array(
+                'name' => 'modified',
+                'type' => 'yesno',
+                'default' => 'no',
+                'prompt' => 'You have files in your SVN checkout (' . $path['from']  . ') that have been modified but not committed, do you still want to tag ' . $version . '?',
+            ));
+            $answers = $this->ui->confirmDialog($params);
+
+            if (!in_array($answers['modified'], array('y', 'yes', 'on', '1'))) {
+                return true;
+            }
+        }
+
+        if (isset($options['slide'])) {
+            $this->_svnRemoveTag($version, $package, $svntag, $packageFile, $options);
+        }
+
+        // Check if tag already exists
+        $releaseTag = $path['local']['base'] . 'tags' . DIRECTORY_SEPARATOR . $svntag;
+        $existsCommand = 'svn ls ' . $path['base'] . 'tags/';
+
+        $fp = popen($existsCommand, "r");
+        $out = '';
+        while ($line = fgets($fp, 1024)) {
+            $out .= rtrim($line)."\n";
+        }
+        pclose($fp);
+
+        if (in_array($svntag . DIRECTORY_SEPARATOR, explode("\n", $out))) {
+            $this->ui->outputData($this->output, $command);
+            return $this->raiseError('SVN tag ' . $svntag . ' for ' . $package . ' already exists.');
+        } elseif (file_exists($path['local']['base'] . 'tags') === false) {
+            return $this->raiseError('Can not locate the tags directory at ' . $path['local']['base'] . 'tags');
+        } elseif (is_writeable($path['local']['base'] . 'tags') === false) {
+            return $this->raiseError('Can not write to the tag directory at ' . $path['local']['base'] . 'tags');
+        } else {
+            $makeCommand = 'svn mkdir ' . $releaseTag;
+            $this->output .= "+ $makeCommand\n";
+            if (empty($options['dry-run'])) {
+                // We need to create the tag dir.
+                $fp = popen($makeCommand, "r");
+                $out = '';
+                while ($line = fgets($fp, 1024)) {
+                    $out .= rtrim($line)."\n";
+                }
+                pclose($fp);
+                $this->output .= "$out\n";
+            }
+        }
+
+        $command = 'svn';
+        if (isset($options['quiet'])) {
+            $command .= ' -q';
+        }
+
+        $command .= ' copy --parents ';
+
+        $dir   = dirname($packageFile);
+        $dir   = substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1);
+        $files = array_keys($info->getFilelist());
+        if (!in_array(basename($packageFile), $files)) {
+            $files[] = basename($packageFile);
+        }
+
+        array_shift($params);
+        if (count($params)) {
+            // add in additional files to be tagged (package files and such)
+            $files = array_merge($files, $params);
+        }
+
+        $commands = array();
+        foreach ($files as $file) {
+            if (!file_exists($file)) {
+                $file = $dir . DIRECTORY_SEPARATOR . $file;
+            }
+            $commands[] = $command . ' ' . escapeshellarg($file) . ' ' .
+                          escapeshellarg($releaseTag . DIRECTORY_SEPARATOR . $file);
+        }
+
+        $this->output .= implode("\n", $commands) . "\n";
+        if (empty($options['dry-run'])) {
+            foreach ($commands as $command) {
+                $fp = popen($command, "r");
+                while ($line = fgets($fp, 1024)) {
+                    $this->output .= rtrim($line)."\n";
+                }
+                pclose($fp);
+            }
+        }
+
+        $command = 'svn ci -m "Tagging the ' . $version  . ' release" ' . $releaseTag . "\n";
+        $this->output .= "+ $command\n";
+        if (empty($options['dry-run'])) {
+            $fp = popen($command, "r");
+            while ($line = fgets($fp, 1024)) {
+                $this->output .= rtrim($line)."\n";
+            }
+            pclose($fp);
+        }
+
+        $this->ui->outputData($this->output, $_cmd);
+        return true;
+    }
+
+    function _svnFindPath($file)
+    {
+        $xml = '';
+        $command = "svn info --xml $file";
+        $fp = popen($command, "r");
+        while ($line = fgets($fp, 1024)) {
+            $xml .= rtrim($line)."\n";
+        }
+        pclose($fp);
+        $url_tag = strpos($xml, '<url>');
+        $url = substr($xml, $url_tag + 5, strpos($xml, '</url>', $url_tag + 5) - ($url_tag + 5));
+
+        $path = array();
+        $path['from'] = substr($url, 0, strrpos($url, '/'));
+        $path['base'] = substr($path['from'], 0, strrpos($path['from'], '/') + 1);
+
+        // Figure out the local paths - see http://pear.php.net/bugs/17463
+        $pos = strpos($file, DIRECTORY_SEPARATOR . 'trunk' . DIRECTORY_SEPARATOR);
+        if ($pos === false) {
+            $pos = strpos($file, DIRECTORY_SEPARATOR . 'branches' . DIRECTORY_SEPARATOR);
+        }
+        $path['local']['base'] = substr($file, 0, $pos + 1);
+
+        return $path;
+    }
+
+    function _svnRemoveTag($version, $package, $tag, $packageFile, $options)
+    {
+        $command = 'svn';
+
+        if (isset($options['quiet'])) {
+            $command .= ' -q';
+        }
+
+        $command .= ' remove';
+        $command .= ' -m "Removing tag for the ' . $version  . ' release."';
+
+        $path = $this->_svnFindPath($packageFile);
+        $command .= ' ' . $path['base'] . 'tags/' . $tag;
+
+
+        if ($this->config->get('verbose') > 1) {
+            $this->output .= "+ $command\n";
+        }
+
+        $this->output .= "+ $command\n";
+        if (empty($options['dry-run'])) {
+            $fp = popen($command, "r");
+            while ($line = fgets($fp, 1024)) {
+                $this->output .= rtrim($line)."\n";
+            }
+            pclose($fp);
+        }
+
         $this->ui->outputData($this->output, $command);
         return true;
     }
@@ -561,8 +809,14 @@ used for automated conversion or learning the format.
             return $this->raiseError("bad parameter(s), try \"help $command\"");
         }
 
-        $obj  = &$this->getPackageFile($this->config, $this->_debug);
-        $info = $obj->fromAnyFile($params[0], PEAR_VALIDATE_NORMAL);
+        $obj = &$this->getPackageFile($this->config, $this->_debug);
+        if (is_file($params[0]) || strpos($params[0], '.xml') > 0) {
+           $info = $obj->fromAnyFile($params[0], PEAR_VALIDATE_NORMAL);
+        } else {
+            $reg  = $this->config->getRegistry();
+            $info = $obj->fromArray($reg->packageInfo($params[0]));
+        }
+
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
@@ -626,7 +880,7 @@ used for automated conversion or learning the format.
                         );
                     foreach ($deps as $type => $subd) {
                         $req = ($type == 'required') ? 'Yes' : 'No';
-                        if ($type == 'group') {
+                        if ($type == 'group' && isset($subd['attribs']['name'])) {
                             $group = $subd['attribs']['name'];
                         } else {
                             $group = '';
@@ -717,7 +971,9 @@ used for automated conversion or learning the format.
         }
 
         $tar = new Archive_Tar($params[0]);
-        $tmpdir = System::mktemp('-d pearsign');
+
+        $tmpdir = $this->config->get('temp_dir');
+        $tmpdir = System::mktemp(' -t "' . $tmpdir . '" -d pearsign');
         if (!$tar->extractList('package2.xml package.xml package.sig', $tmpdir)) {
             return $this->raiseError("failed to extract tar file");
         }
@@ -774,7 +1030,7 @@ used for automated conversion or learning the format.
         if (!class_exists('PEAR_Installer')) {
             require_once 'PEAR/Installer.php';
         }
-        $a = &new PEAR_Installer($ui);
+        $a = new PEAR_Installer($ui);
         return $a;
     }
 
@@ -791,7 +1047,7 @@ used for automated conversion or learning the format.
         }
 
         if (class_exists('PEAR_Command_Packaging')) {
-            $a = &new PEAR_Command_Packaging($ui, $config);
+            $a = new PEAR_Command_Packaging($ui, $config);
         } else {
             $a = null;
         }

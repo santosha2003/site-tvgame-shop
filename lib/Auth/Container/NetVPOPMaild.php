@@ -48,7 +48,7 @@ require_once 'Net/Vpopmaild.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.5.4  File: $Revision: 1.1 $
+ * @version    Release: 1.5.4  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.6.0
  */
@@ -108,7 +108,7 @@ class Auth_Container_Vpopmaild extends Auth_Container
     function fetchData($username, $password)
     {
         $this->log('Auth_Container_Vpopmaild::fetchData() called.', AUTH_LOG_DEBUG);
-        $vpopmaild =& new Net_Vpopmaild();
+        $vpopmaild = new Net_Vpopmaild();
         // Connect
         try {
             $res = $vpopmaild->connect($this->server, $this->port, $this->method);

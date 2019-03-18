@@ -10,7 +10,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: DependencyDB.php,v 1.44 2009/03/21 15:15:26 dufuz Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -30,7 +29,7 @@ $GLOBALS['_PEAR_DEPENDENCYDB_INSTANCE'] = array();
  * @author     Tomas V.V.Cox <cox@idec.net.com>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.8.1
+ * @version    Release: 1.10.6
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -89,9 +88,8 @@ class PEAR_DependencyDB
      * @param PEAR_Config
      * @param string|false full path to the dependency database, or false to use default
      * @return PEAR_DependencyDB|PEAR_Error
-     * @static
      */
-    function &singleton(&$config, $depdb = false)
+    public static function &singleton(&$config, $depdb = false)
     {
         $phpdir = $config->get('php_dir', null, 'pear.php.net');
         if (!isset($GLOBALS['_PEAR_DEPENDENCYDB_INSTANCE'][$phpdir])) {
@@ -122,8 +120,11 @@ class PEAR_DependencyDB
 
         $this->_registry = &$this->_config->getRegistry();
         if (!$depdb) {
-            $this->_depdb = $this->_config->get('php_dir', null, 'pear.php.net') .
-                DIRECTORY_SEPARATOR . '.depdb';
+            $dir = $this->_config->get('metadata_dir', null, 'pear.php.net');
+            if (!$dir) {
+                $dir = $this->_config->get('php_dir', null, 'pear.php.net');
+            }
+            $this->_depdb =  $dir . DIRECTORY_SEPARATOR . '.depdb';
         } else {
             $this->_depdb = $depdb;
         }
@@ -164,18 +165,19 @@ class PEAR_DependencyDB
     {
         if (!is_file($this->_depdb)) {
             $this->rebuildDB();
-        } else {
-            $depdb = $this->_getDepDB();
-            // Datatype format has been changed, rebuild the Deps DB
-            if ($depdb['_version'] < $this->_version) {
-                $this->rebuildDB();
-            }
+            return;
+        }
 
-            if ($depdb['_version']{0} > $this->_version{0}) {
-                return PEAR::raiseError('Dependency database is version ' .
-                    $depdb['_version'] . ', and we are version ' .
-                    $this->_version . ', cannot continue');
-            }
+        $depdb = $this->_getDepDB();
+        // Datatype format has been changed, rebuild the Deps DB
+        if ($depdb['_version'] < $this->_version) {
+            $this->rebuildDB();
+        }
+
+        if ($depdb['_version']{0} > $this->_version{0}) {
+            return PEAR::raiseError('Dependency database is version ' .
+                $depdb['_version'] . ', and we are version ' .
+                $this->_version . ', cannot continue');
         }
     }
 
@@ -228,9 +230,10 @@ class PEAR_DependencyDB
         foreach ($depend as $info) {
             $temp = $this->getDependencies($info);
             foreach ($temp as $dep) {
-                if (isset($dep['dep'], $dep['dep']['channel'], $dep['dep']['name']) &&
-                      strtolower($dep['dep']['channel']) == $channel &&
-                      strtolower($dep['dep']['name']) == $package
+                if (
+                    isset($dep['dep'], $dep['dep']['channel'], $dep['dep']['name']) &&
+                    strtolower($dep['dep']['channel']) == $channel &&
+                    strtolower($dep['dep']['name']) == $package
                 ) {
                     if (!isset($dependencies[$info['channel']])) {
                         $dependencies[$info['channel']] = array();
@@ -548,12 +551,9 @@ class PEAR_DependencyDB
             return $err;
         }
 
-        $rt = get_magic_quotes_runtime();
-        set_magic_quotes_runtime(0);
         clearstatcache();
         fclose($fp);
         $data = unserialize(file_get_contents($this->_depdb));
-        set_magic_quotes_runtime($rt);
         $this->_cache = $data;
         return $data;
     }
@@ -575,10 +575,7 @@ class PEAR_DependencyDB
             return PEAR::raiseError("Could not open dependencies file `".$this->_depdb."' for writing");
         }
 
-        $rt = get_magic_quotes_runtime();
-        set_magic_quotes_runtime(0);
         fwrite($fp, serialize($deps));
-        set_magic_quotes_runtime($rt);
         fclose($fp);
         $this->_unlock();
         $this->_cache = $deps;
@@ -741,13 +738,6 @@ class PEAR_DependencyDB
                     break;
                 }
             }
-
-            if (!$found) {
-                $data['packages'][$depchannel][$dep['name']][] = array(
-                    'channel' => $channel,
-                    'package' => $package
-                );
-            }
         } else {
             if (!isset($data['packages'])) {
                 $data['packages'] = array();
@@ -761,6 +751,10 @@ class PEAR_DependencyDB
                 $data['packages'][$depchannel][$dep['name']] = array();
             }
 
+            $found = false;
+        }
+
+        if (!$found) {
             $data['packages'][$depchannel][$dep['name']][] = array(
                 'channel' => $channel,
                 'package' => $package

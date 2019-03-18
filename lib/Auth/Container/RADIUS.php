@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: RADIUS.php,v 1.16 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
  * @since      File available since Release 1.2.0
  */
@@ -41,7 +41,7 @@ require_once "Auth/RADIUS.php";
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.16 $
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
  * @since      Class available since Release 1.2.0
  */
@@ -136,7 +136,9 @@ class Auth_Container_RADIUS extends Auth_Container
                     $this->radius->response  = pack('H*', $password);
                 } else {
                     require_once 'Crypt/CHAP.php';
-                    $classname = 'Crypt_' . $this->authtype;
+                    $classname = $this->authtype == 'MSCHAPv1'
+                        ? 'Crypt_CHAP_MSv1'
+                        : 'Crypt_CHAP_MD5';
                     $crpt = new $classname;
                     $crpt->password = $password;
                     $this->radius->challenge = $crpt->challenge;
@@ -147,7 +149,7 @@ class Auth_Container_RADIUS extends Auth_Container
 
             case 'MSCHAPv2':
                 require_once 'Crypt/CHAP.php';
-                $crpt = new Crypt_MSCHAPv2;
+                $crpt = new Crypt_CHAP_MSv2;
                 $crpt->username = $username;
                 $crpt->password = $password;
                 $this->radius->challenge     = $crpt->authChallenge;

@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id: Array.php,v 1.5 2007/06/12 03:11:26 aashley Exp $
+ * @version    CVS: $Id$
  * @since      File available since Release 1.4.0
  */
 
@@ -64,7 +64,7 @@ require_once "PEAR.php";
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: 1.6.1  File: $Revision: 1.5 $
+ * @version    Release: @package_version@  File: $Revision$
  * @since      File available since Release 1.4.0
  */
 
