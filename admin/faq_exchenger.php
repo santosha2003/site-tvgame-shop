@@ -32,7 +32,7 @@ if(isset($del)){
 
          }
   }
-log_array($id);
+//log_array($id);
 header("Location: index.php?op=faqcatalog&page=$page&cat=$cat&id=$id&DEL=$del");
  exit;
 

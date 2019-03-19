@@ -1,6 +1,6 @@
 <?php
-//require_once("../lib/config_admin.php");
 require_once("../lib/config_admin.php");
+//require_once("../lib/config.php");
 session_start ();   //php5.6 + init _SESSION var`s
 //break auth session
 //HTTP_Session2::start('shop_adm', uniqid('MyID'));
@@ -11,7 +11,7 @@ $a -> start();
 if (isset($_GET['op'])) {
 if($_GET['op']=='logout') $a -> logout();
    }
-if ($a->getAuth()) {
+if ($a->checkAuth()) {  //get
   $username = $a -> getUsername();
   if(isset($_POST['username'])) {
 	$db -> query("UPDATE admin SET last=now() WHERE username='$username'");

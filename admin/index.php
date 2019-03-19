@@ -3,16 +3,38 @@
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_cookies', 1);
 
-//print_r($_POST);
-//print_r($_GET);
+$previous_name = session_name("shop_adm");  // php7.2 equ session.name ini
+
+
+print_r($_POST);
+print_r($_GET);
 require_once('./auth.php');
-//$tmpl = new HTML_Template_IT('./templates');
+
+print_r ($_SESSION);
+if (isset($_SESSION['auth']['perm'])) {
+     $au=$_SESSION['auth']['perm'];
+     $gsid=$_SESSION['_auth_shop_adm']['challengekey'];
+
+    echo "<br /> проверка пройдена‚, <b>{$au}</b> sessia {$gsid}<br />"; //{($_SESSION[_auth_shop_adm][challengekey])}
+
+} else {
+
+    echo "Здравствуйте‚, <b>гость</b><br />";
+    echo "Ваш код?";
+
+}
+
+
 //session_start();
-if (!isset($_SESSION['auth']['perm'])) {  $_SESSION['auth']['perm']=""; echo "!!!!!!!!!!!!!"; }
-echo "_login_ perm: ";
- echo ($_SESSION['auth']['perm']);
-echo " . ";
-//print_r($_SESSION);
+//if (!isset($_SESSION['auth']['perm'])) {  $_SESSION['auth']['perm']=""; echo "!!!!!!!!!!!!!"; }
+//echo "_login_ perm: ";
+// echo ($_SESSION['auth']['perm']);
+//echo " . ";
+
+
+header('Content-Type: text/html; charset=windows-1251', true); // move to index after session
+
+//$tmpl = new HTML_Template_IT('./templates');
 
 $tmpl -> loadTemplatefile("header.inc",true,false);
 $page = $tmpl -> get();
@@ -32,7 +54,7 @@ if (isset($_POST['username'])) {
 }
 
 
-//echo "<pre>"; print_r ($_SESSION['auth']['perm']); echo "</pre>";
+echo "<pre>"; print_r ($_SESSION['auth']['perm']); echo "</pre>";   //small font
 
 //						edit add actions ("POST" forms) -store in db 
 if (isset($_POST['op'])) {
@@ -319,13 +341,56 @@ if (isset($_GET['op'])) {
 $page .= $tmpl -> get();
 }
 //                                                  now ok (santosha)
-$tmpl -> loadTemplatefile("body.inc",true,false);
+
+$_SESSION["firstname"] = $au;
+$_SESSION["lastname"] = $gsid;
+
+$tmpl -> loadTemplatefile("body.inc",true,true);
+
+$user1=$_SESSION["firstname"];
+$pw1=$_SESSION["lastname"];
+echo 'Hi, ' . $user1 . ' ' . $pw1 . '   ';
+
+           $tmpl -> setCurrentBlock("u_sess");
+          $tmpl -> parseCurrentBlock("u_sess");
+     $tmpl -> setVariable('user1',$user1);
+     $tmpl -> setVariable('pw1',$pw1);
+register_globals ();
+//print_r ($GLOBALS);
+
 $page .= $tmpl -> get();
 $tmpl -> loadTemplatefile("footer.inc",true,false);
 $page .= $tmpl -> get();
 
 echo $page;
 
+
+function register_global_array( $sg ) {
+    Static $superGlobals    = array(
+        'e' => '_ENV'       ,
+        'g' => '_GET'       ,
+        'p' => '_POST'      ,
+        'c' => '_COOKIE'    ,
+        'r' => '_REQUEST'   ,
+        's' => '_SERVER'    ,
+        'f' => '_FILES'
+    );
+   
+    Global ${$superGlobals[$sg]};
+   
+    foreach( ${$superGlobals[$sg]} as $key => $val ) {
+        $GLOBALS[$key]  = $val;
+    }
+}
+ 
+function register_globals( $order = 'gpc' ) {
+    $_SERVER;       //See Note Below
+    $_ENV;
+    $_REQUEST;
+ 
+    $order  = str_split( strtolower( $order ) );
+    array_map( 'register_global_array' , $order );
+}
 
 
 ?>
