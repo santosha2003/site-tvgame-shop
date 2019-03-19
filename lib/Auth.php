@@ -18,7 +18,7 @@
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    CVS: $Id$
+ * @version    CVS: $Id: Auth.php 289651 2009-10-15 04:39:07Z aashley $
  * @link       http://pear.php.net/package/Auth
  */
 
@@ -82,7 +82,7 @@ define('AUTH_ADV_CHALLENGE', 3);
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: @package_version@  File: $Revision$
+ * @version    Release: @package_version@  File: $Revision: 289651 $
  * @link       http://pear.php.net/package/Auth
  */
 class Auth {
@@ -353,10 +353,10 @@ class Auth {
         }
 
         // Assign Some globals to internal references, this will replace _importGlobalVariable
-        $this->session = &$_SESSION[$this->_sessionName];
-        $this->server = $_SERVER;
-        $this->post = $_POST;
-        $this->cookie = $_COOKIE;
+        $this->session =& $_SESSION[$this->_sessionName];
+        $this->server =& $_SERVER;
+        $this->post =& $_POST;
+        $this->cookie =& $_COOKIE;
 
         if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
@@ -367,15 +367,15 @@ class Auth {
         }
 
         if (is_object($storageDriver)) {
-            $this->storage = $storageDriver;
+            $this->storage =& $storageDriver;
             // Pass a reference to auth to the container, ugly but works
             // this is used by the DB container to use method setAuthData not staticaly.
-            $this->storage->_auth_obj = $this;
+            $this->storage->_auth_obj =& $this;
         } else {
             // $this->storage = $this->_factory($storageDriver, $options);
             //
             $this->storage_driver = $storageDriver;
-            $this->storage_options = $options;
+            $this->storage_options =& $options;
         }
     }
 
@@ -442,9 +442,9 @@ class Auth {
     function _loadStorage()
     {
         if(!is_object($this->storage)) {
-            $this->storage = $this->_factory($this->storage_driver,
+            $this->storage =& $this->_factory($this->storage_driver,
                     $this->storage_options);
-            $this->storage->_auth_obj = $this;
+            $this->storage->_auth_obj =& $this;
             $this->log('Loaded storage container ('.$this->storage_driver.')', AUTH_LOG_DEBUG);
             return(true);
         }
@@ -463,11 +463,12 @@ class Auth {
      * @return object Object   Storage object
      * @access private
      */
-    function _factory($driver, $options = '')
+    function &_factory($driver, $options = '')
     {
         $storage_class = 'Auth_Container_' . $driver;
         include_once 'Auth/Container/' . $driver . '.php';
-        return new $storage_class($options);
+        $obj =& $storage_class($options);  //new 
+        return $obj;
     }
 
     // }}}
@@ -563,7 +564,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                $this->log('Calling loginCallback ('.$this->callbackToString($this->loginCallback).').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginCallback ('.$this->loginCallback.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginCallback, array($this->username, &$this));
             }
         }
@@ -574,7 +575,7 @@ class Auth {
             $this->log('Incorrect login.', AUTH_LOG_INFO);
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                $this->log('Calling loginFailedCallback ('.$this->callbackToString($this->loginFailedCallback).').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginFailedCallback ('.$this->loginFailedCallback.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
@@ -582,7 +583,7 @@ class Auth {
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             $this->log('Rendering Login Form.', AUTH_LOG_INFO);
             if (is_callable($this->loginFunction)) {
-                $this->log('Calling loginFunction ('.$this->callbackToString($this->loginFunction).').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginFunction ('.$this->loginFunction.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this));
             } else {
                 // BC fix Auth used to use drawLogin for this
@@ -658,7 +659,7 @@ class Auth {
         if(!isset($_SESSION[$this->_sessionName])) {
             $_SESSION[$this->_sessionName] = array();
         }
-        $this->session = $_SESSION[$this->_sessionName];
+        $this->session =& $_SESSION[$this->_sessionName];
     }
 
     // }}}
@@ -778,11 +779,6 @@ class Auth {
             return;
         }
         $this->session['data'][$name] = $value;
-    }
-
-    function deleteAuthData($name)
-    {
-       unset($this->session['data'][$name]);
     }
 
     // }}}
@@ -999,7 +995,7 @@ class Auth {
                 }
 
                 if (is_callable($this->checkAuthCallback)) {
-                    $this->log('Calling checkAuthCallback ('.$this->callbackToString($this->checkAuthCallback).').', AUTH_LOG_DEBUG);
+                    $this->log('Calling checkAuthCallback ('.$this->checkAuthCallback.').', AUTH_LOG_DEBUG);
                     $checkCallback = call_user_func_array($this->checkAuthCallback, array($this->username, &$this));
                     if ($checkCallback == false) {
                         $this->log('checkAuthCallback failed.', AUTH_LOG_INFO);
@@ -1078,7 +1074,7 @@ class Auth {
         $this->log('Auth::logout() called.', AUTH_LOG_DEBUG);
 
         if (is_callable($this->logoutCallback) && isset($this->session['username'])) {
-            $this->log('Calling logoutCallback ('.$this->callbackToString($this->logoutCallback).').', AUTH_LOG_DEBUG);
+            $this->log('Calling logoutCallback ('.$this->logoutCallback.').', AUTH_LOG_DEBUG);
             call_user_func_array($this->logoutCallback, array($this->session['username'], &$this));
         }
 
@@ -1294,7 +1290,7 @@ class Auth {
             if (!class_exists('Log')) {
                 include_once 'Log.php';
             }
-            $this->logger = Log::singleton('null',
+            $this->logger =& Log::singleton('null',
                     null,
                     'auth['.getmypid().']',
                     array(),

@@ -1,17 +1,14 @@
 <?php
-ini_set('include_path',':/var/www/shedevr/lib:/usr/local/share/pear');
+ini_set('include_path',':/var/www/shedevr/lib');
 ini_set('log_errors', 1); 
-ini_set('error_log', '/var/www/shedevr/error_log.txt'); 
-ini_set('error_reporting', E_ALL & ~E_NOTICE);
-error_reporting(E_ALL & ~E_NOTICE);
-ini_set('display_errors', 1);
-header('Content-Type: text/html; charset=windows-1251', true); 
-$_SERVER['HTTP_HOST'] = 'santosha.su:92';
-$_SERVER['SERVER_NAME'] = 'santosha.su:92';
+ini_set('error_log', 'shedevr_error_log.txt'); 
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 0);
+//header('Content-Type: text/html; charset=windows-1251', true);  into index move (after auth & session)
+$_SERVER['HTTP_HOST'] = 'santoshapro.me:92';
+$_SERVER['SERVER_NAME'] = 'santoshapro.me:92';
 
 $shop_true_id = '1';
-
-print_r ($_SERVER);
 
 require_once 'PEAR.php';
 require_once 'DB.php';
@@ -27,25 +24,26 @@ $form = new FormProc;
 $tmpl = new HTML_Template_IT("./templates");
 
 $dbhost = "localhost";
+$dbuname = "u1";
+$dbpass = "123";
 $dbport = "3306";
-$dbuname = "mysqluser";
-$dbpass = "mysqlpass";
 $dbname = "shedevr_ru";
 $dbtype = "mysqli";
 $dsn = "$dbtype://$dbuname:$dbpass@$dbhost:$dbport/$dbname";
-/*
-define(DEBUG_ENV, true);
+
+define('DEBUG_ENV', true);
 function handle_pear_error($error_obj) {
-  if(DEBUG_ENV) {
+  if('DEBUG_ENV') {
         echo ($error_obj->getMessage()); echo "<br>"; echo ($error_obj->getDebugInfo());//die($error_obj->getMessage()."<br>".$error_obj->getDebugInfo());
   } else {
 	echo ("Запрос не выполнен. Повторите позже!");  // die("Запрос не выполнен. Повторите позже!");
   }
 }
 PEAR::setErrorHandling(PEAR_ERROR_CALLBACK,'handle_pear_error');
-*/
+
 $db = DB::connect("$dbtype://$dbuname:$dbpass@$dbhost:$dbport/$dbname");
 if (DB::isError($db)) echo ($db->getMessage()); //die ($db->getMessage());
+$db->query("SET CHARACTER SET 'cp1251'");  //php 7.2 ok  Pear DB patched php7.2
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 //п╨п╬п╢п╦я─п╬п╡п╨п╟ я┐ я┬п╣п╢п╣п╡я─п╟ 1251
 //mysql_query("SET NAMES 'utf-8'");
