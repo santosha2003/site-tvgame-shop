@@ -1,29 +1,39 @@
 <?php
 // go php5 28.08.2009
-ini_set('session.use_trans_sid', 0);
-ini_set('session.use_cookies', 1);
-
-$previous_name = session_name("shop_adm");  // php7.2 equ session.name ini
-
-
-print_r($_POST);
-print_r($_GET);
+// go php7.2 28.03.2019
 require_once('./auth.php');
+session_regenerate_id(true);
+
+$se= session_save_path();
+
+echo 'username '; print_r ($username); echo 'role: ';
 
 print_r ($_SESSION);
+//print_r ($sessionConfig);
+//print_r ($session_status);
+
 if (isset($_SESSION['auth']['perm'])) {
      $au=$_SESSION['auth']['perm'];
      $gsid=$_SESSION['_auth_shop_adm']['challengekey'];
-
-    echo "<br /> проверка пройдена‚, <b>{$au}</b> sessia {$gsid}<br />"; //{($_SESSION[_auth_shop_adm][challengekey])}
-
-} else {
-
-    echo "Здравствуйте‚, <b>гость</b><br />";
-    echo "Ваш код?";
-
 }
 
+ if (session_status()==2)  {
+  echo "<br /> проверка пройдена‚, <b>{$au}</b> sessia {$gsid}<br />"; //{($_SESSION[_auth_shop_adm][challengekey])}
+ echo "Session path {$se} /tmp ? chmod 777 <br />"; // may do not work if not empty (default empty is OK) 
+ $nam_sess = session_name();
+   echo "<br />  {$se} ";
+   echo "<br />  {$nam_sess} ";
+   echo "<br /> previous  {$previous_name}";
+  echo "<br /> store to {$sess_save_p}";
+  echo "<br /> {$_SESSION['name']}";
+  echo "<br /> cookie path (relative to site root) {$cookieParam['path']} <br /> "; 
+ } else {
+ echo "<br /> проверка пройдена‚, <b>SHOP_ADM</b> sessia BROKEN <br />"; //{($_SESSION[_auth_shop_adm][challengekey])
+    echo "Здравствуйте‚, <b>гость</b><br />";
+    echo "Ваш код?";
+ }
+
+//print_r (session_status()); // 2 if active
 
 //session_start();
 //if (!isset($_SESSION['auth']['perm'])) {  $_SESSION['auth']['perm']=""; echo "!!!!!!!!!!!!!"; }
@@ -356,7 +366,9 @@ echo 'Hi, ' . $user1 . ' ' . $pw1 . '   ';
      $tmpl -> setVariable('user1',$user1);
      $tmpl -> setVariable('pw1',$pw1);
 register_globals ();
+
 //print_r ($GLOBALS);
+session_commit ();
 
 $page .= $tmpl -> get();
 $tmpl -> loadTemplatefile("footer.inc",true,false);
@@ -367,12 +379,13 @@ echo $page;
 
 function register_global_array( $sg ) {
     Static $superGlobals    = array(
-        'e' => '_ENV'       ,
+        'n' => '_ENV'       ,
         'g' => '_GET'       ,
         'p' => '_POST'      ,
         'c' => '_COOKIE'    ,
         'r' => '_REQUEST'   ,
         's' => '_SERVER'    ,
+        'e' => '_SESSION'    ,
         'f' => '_FILES'
     );
    
@@ -383,10 +396,11 @@ function register_global_array( $sg ) {
     }
 }
  
-function register_globals( $order = 'gpc' ) {
+function register_globals( $order = 'gpce' ) {
     $_SERVER;       //See Note Below
     $_ENV;
     $_REQUEST;
+    $_SESSION;
  
     $order  = str_split( strtolower( $order ) );
     array_map( 'register_global_array' , $order );

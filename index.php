@@ -1,13 +1,20 @@
 <?php
+// go php5 28.08.2009
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_cookies', 1);
 
+$previous_name = session_name("www_users_a");  // php7.2 equ session.name ini
+
+
 require_once('./lib/config.php');
-$tmpl = new HTML_Template_IT('./templates');
+//$tmpl = new HTML_Template_IT('./templates'); //into config
 $petia = 5;
 session_start();
 //$_SESSION['petia'] = '5';
 HTTP_Session2::start('www_users_ing', uniqid('MyID'));
+
+header('Content-Type: text/html; charset=windows-1251', true); // move to index after session
+
 session_register('petia');  // php5.4 register function in lib/config.php
 
 //print_r ($db);
@@ -33,12 +40,7 @@ switch($_POST['op']) {
         break;
 
   case "order1":
-        if ($a->getAuth()) {
-          include("./register.php");
-        } // else {
-          //header("Location: index.php?op=reg");
-          //exit;
-        //}
+
         include("./order_snx1.php");
         break;
 
@@ -158,7 +160,6 @@ $page .= $tmpl -> get();
 switch($_GET['op']) {
   case "order_snx":
 // вывод страницы благодарности
-    if ($a->getAuth()) {
         $tmpl -> loadTemplatefile("order_snx.inc",true,true);
         $tmpl -> setVariable($_POST);
         $row = $db -> getRow("SELECT *,date_format(date_zid,'%d.%m.%Y') as date_zid,date_format(date_delivery,'%d.%m.%Y') as date_delivery FROM orders WHERE zid='$_GET[zid]'");
@@ -170,15 +171,10 @@ switch($_GET['op']) {
          }
         $tmpl -> setVariable($row);
 
-        } else {
-          header("Location: index.php?op=reg");
-          exit;
-        }
         break;
 
   case "order_snx1":
 // вывод страницы благодарности
-    if ($a->getAuth()) {
         $tmpl -> loadTemplatefile("order_snx1.inc",true,true);
         $row = $db -> getRow("SELECT *,date_format(date_zid,'%d.%m.%Y') as date_zid,date_format(date_delivery,'%d.%m.%Y') as date_delivery FROM orders WHERE zid='$_GET[zid]'");
         $time_delivery = explode("|",$row[time_delivery]);
@@ -190,10 +186,6 @@ switch($_GET['op']) {
         $tmpl -> setVariable($row);
          $tmpl -> setVariable($_POST);
 
-        } else {
-          header("Location: index.php?op=reg");
-          exit;
-        }
         break;
 
   case "order":

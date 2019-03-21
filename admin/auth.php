@@ -1,10 +1,13 @@
 <?php
 require_once("../lib/config_admin.php");
 //require_once("../lib/config.php");
-session_start ();   //php5.6 + init _SESSION var`s
-//break auth session
+
+if (session_status() !== PHP_SESSION_ACTIVE) {my_session_start();}   //name _authsession if comment this line //php5.6 + init _SESSION var`s  // working - session_start(); 
+// now session_start() (now line below) by Pear Auth  - & may uncomment upper line - if session path  + name set correctly before start session, Auth working OK.
+
+//break auth session  (storage handle .. into DB not by cookie)
 //HTTP_Session2::start('shop_adm', uniqid('MyID'));
-$a = new Auth("DB",$params,false,false);
+$a = new Auth("DB",$params,'',false);
 $a -> setSessionname("shop_adm");
 $a -> start();
 
@@ -22,11 +25,6 @@ if ($a->checkAuth()) {  //get
 	  header("Location: index.php");
 	  exit;
 	}
-echo 'username '; print_r ($username); echo 'role: ';
-print_r ($perm);
-//print_r ($_SESSION);
-
-
   }
 } else {
   $tmpl -> loadTemplatefile("login.inc",true,false);

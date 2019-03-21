@@ -354,9 +354,9 @@ class Auth {
 
         // Assign Some globals to internal references, this will replace _importGlobalVariable
         $this->session =& $_SESSION[$this->_sessionName];
-        $this->server =& $_SERVER;
-        $this->post =& $_POST;
-        $this->cookie =& $_COOKIE;
+        $this->server = $_SERVER;  //&
+        $this->post = $_POST;
+        $this->cookie = $_COOKIE;
 
         if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
@@ -467,7 +467,7 @@ class Auth {
     {
         $storage_class = 'Auth_Container_' . $driver;
         include_once 'Auth/Container/' . $driver . '.php';
-        $obj =& $storage_class($options);  //new 
+        $obj = new $storage_class($options);  //new   //        $obj = new $storage_class($options);  //new   //
         return $obj;
     }
 
