@@ -39,7 +39,7 @@ $_SESSION['sess_search'] = array(
 // подготовка строки поиска
 $search = substr($search,0,64);
 $search = preg_replace("/[^\w\x7F-\xFF\s]/", " ", $search);
-$search1 = trim(preg_replace("/\s(\S{1,3})\s/", " ", ereg_replace(" +", "  "," $search ")));
+$search1 = trim(preg_replace("/\s(\S{1,3})\s/", " ", preg_replace("/ +/", "  ",$search)));
 $search1 = ereg_replace(" +", " ", $search1);
 $search1 = explode(" ",$search1);
 // подготовка запроса
@@ -100,7 +100,7 @@ if($res -> numRows()) {
     $tmpl -> setCurrentBlock("list");
     $tmpl -> setVariable($row);
     $tmpl -> parseCurrentBlock("list");
-    $tmpl -> free();
+//    $tmpl -> free();
   }
 } else {
   $tmpl -> touchBlock("no_list");

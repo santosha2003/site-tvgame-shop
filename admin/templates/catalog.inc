@@ -10,29 +10,49 @@ function submitForm(id) {
 -->
 </script>
 <div class=title>Управление каталогом
+
 <!-- BEGIN add_name -->
+
 <font class=error>(Укажите название раздела каталога)</font>
+
 <!-- END add_name -->
+
 <!-- BEGIN update -->
+
 <font class=warning>(Данные раздела каталога обновлены)</font>
+
 <!-- END update -->
+
 <!-- BEGIN add -->
+
 <font class=warning>(Новый раздел каталога добавлен в базу данных)</font>
+
 <!-- END add -->
+
 <!-- BEGIN delete -->
+
 <font class=warning>(Раздел каталога удален)</font>
+
 <!-- END delete -->
+
 </div>
 <hr>
 <table cellspacing=0 cellpadding=0 border=0>
 <tr>
 <td valign=top class=t>
+
 <!-- BEGIN header_add -->
+
         <p class=th>Добавить новый раздел каталога</p>
+
 <!-- END header_add -->
+
 <!-- BEGIN header_edit -->
+
         <p class=th>Редактировать раздел каталога</p>
+
 <!-- END header_edit -->
+
 <table border="0" cellpadding="4" cellspacing="2">
 <form action="index.php" method="POST">
 <input type=hidden name=op value="catalog">
@@ -53,9 +73,13 @@ function submitForm(id) {
 </tr>
 <tr>
   <td class=t>&nbsp;</td>
+
 <!-- BEGIN submit_add -->
+
   <td class=t colspan=2><input type=submit name="{sadd}" value="Добавить категорию"></td>
+
 <!-- END submit_add -->
+
 <!-- BEGIN submit_edit -->
   <td class=t colspan=2><input type=submit name="{sedit}" value="Внести изменения"></td>
 <!-- END submit_edit -->
@@ -65,11 +89,13 @@ function submitForm(id) {
         <p class=th>Текущий раздел каталога</p>
 
 <!-- BEGIN header -->
+
 <table border="0" cellpadding="4" cellspacing="2">
   <tr>
         <td class=tb><a href=index.php?op=catalog&parent=2>Корень</a>{title}</td>
   </tr>
 </table>
+
 <!-- END header -->
 
         <p class=th>Управление подкатегориями</p>

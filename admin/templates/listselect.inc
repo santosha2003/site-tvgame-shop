@@ -12,7 +12,7 @@
 
 
 
-             <!-- BEGIN hidden_list -->
+<!-- BEGIN hidden_list -->
 
 
 
@@ -21,14 +21,14 @@
                 <input type=hidden name=op value=select>
                 <input type=hidden name=mode value=start>
 
-            <!-- BEGIN list_cat -->
+<!-- BEGIN list_cat -->
              <table width="100%" border="1" cellspacing="1" cellpadding="0" align="center" bordercolor=000000>
 
               <tr>
                 <td class=tb bgcolor="#cccccc" height="20" align="center"><b>{name}</b></td>
               </tr>
             </table>
-              <!-- END list_cat -->
+<!-- END list_cat -->
 
 
 
@@ -46,7 +46,7 @@
                     </tr>
 
 
-  <!-- BEGIN list_items -->
+<!-- BEGIN list_items -->
 
                <input type=hidden name=id[] value={id}>
                     <tr bgcolor="#FFFFFF">
@@ -62,7 +62,7 @@
                     </tr>
 
 
-    <!-- END list_items -->
+<!-- END list_items -->
 
 
             </table>
@@ -91,17 +91,17 @@
                 <td align="left">
                <font class=nameglav><b>Категории</b></font>
                <hr color="000000" size=1 noshade>
-      <!-- BEGIN list_items_cat1 -->
+<!-- BEGIN list_items_cat1 -->
                 <font class=nameglav><a href="index.php?op=select&mode=listselect&id={id}">{name}</a></font>
 <br>
-    <!-- END list_items_cat1 -->
+<!-- END list_items_cat1 -->
     <hr color="000000" size=1 noshade>
                 </td>
               </tr>
             </table><br>
 
 
- <!-- END hidden_list -->
+<!-- END hidden_list -->
  <br>
 
 

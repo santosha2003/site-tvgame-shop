@@ -43,11 +43,12 @@ echo "
 	if(empty($_POST['call'])) {
 	$postdb=$statu;
 	$_POST['db']=$postdb;
-	  $db -> query("UPDATE items SET $_POST[db] = '$statu' WHERE id = '$id'");
+	$db1=$_POST['db'];
+	  $db -> query("UPDATE items SET $db1 = '$statu' WHERE id = '$id'");
 	  echo "window.opener.location.reload();";
 	  echo "window.close();";
 	} else {
-	  echo "window.opener.document.send.".$_POST['db'].".value='$statu';";
+	  echo "window.opener.document.send.".$db1.".value='$statu';";
 	  echo "window.close();";
 	}
 echo "
@@ -81,9 +82,11 @@ echo "
 
   if(empty($_POST['source'])) {
 	session_register('add');
-	header("Location: index.php?op=$table&db=$_POST[db]");
+	$db2=$_POST['db'];
+	$sou=$_POST['source'];
+	header("Location: index.php?op=$table&db=$db2");
   } else {
-	header("Location: reference.php?db=$_POST[db]&source=$_POST[source]");
+	header("Location: reference.php?db=$db2&source=$sou");
   }
 	exit;
 
@@ -94,6 +97,8 @@ echo "
 	if(!empty($_FILES['photo']['name'])) {
 	  require("../lib/class.SDImageUploading.php");
 	  $iu = new SDImageUploading();
+	  $db4=$_POST['db'];
+	  $id4=$_POST['id'];
 	  $img_path = '../images/pict/';
 	  $img_upload = $_FILES['photo'];
 	  $img_name = md5($_FILES['photo']['tmp_name']);
@@ -101,7 +106,7 @@ echo "
 	  if (!$image_ext) $error .= "<li>".$iu->error;
 	  $photo = $_POST['photo'] = $img_name.$image_ext;
 	  chmod($img_path.$_POST['photo'],0644);
-	  $old_photo = $db -> getOne("SELECT photo FROM $_POST[db] WHERE id='$_POST[id]'");
+	  $old_photo = $db -> getOne("SELECT photo FROM $db4 WHERE id='$id4'");
 	  if(!empty($old_photo)) {
 		@unlink("../images/pict/".$old_photo);
 	  }
@@ -115,9 +120,10 @@ echo "
 	$result = $form->update($_POST['db'],$missing,$where);
   if(empty($_POST['source'])) {
 	session_register('update');
-	header("Location: index.php?op=$table&db=$_POST[db]");
+	header("Location: index.php?op=$table&db=$db4");
   } else {
-	header("Location: reference.php?db=$_POST[db]&source=$_POST[source]");
+        $source=$_POST['source'];
+	header("Location: reference.php?db=$db4&source=$source");
   }
 	exit;
 	break;
@@ -126,90 +132,104 @@ echo "
 if (!isset($_GET['action']))  $_GET['action']="";
 switch ($_GET['action']) {
   case "vis":
-	$result = $db -> query("UPDATE $_GET[db] SET status='Y' WHERE id='$_GET[id]'");
+        $db1=$_GET['db'];
+        $id1=$_GET['id'];
+	$result = $db -> query("UPDATE $db1 SET status='Y' WHERE id='$id1'");
   if(empty($_GET['source'])) {
 	session_register('visible');
-	header("Location: index.php?op=$table&db=$_GET[db]");
+	header("Location: index.php?op=$table&db=$db1");
   } else {
-	header("Location: reference.php?db=$_GET[db]&source=$_GET[source]");
+        $source=$_GET['source'];
+	header("Location: reference.php?db=$db1&source=$source");
   }
 	exit;
 	break;
   case "inv":
-	$result = $db -> query("UPDATE $_GET[db] SET status='N' WHERE id='$_GET[id]'");
+        $db2=$_GET['db'];
+        $id2=$_GET['id'];
+	$result = $db -> query("UPDATE $db2 SET status='N' WHERE id='$id2'");
   if(empty($_GET['source'])) {
 	session_register('invisible');
-	header("Location: index.php?op=$table&db=$_GET[db]");
+	header("Location: index.php?op=$table&db=$db2");
   } else {
-	header("Location: reference.php?db=$_GET[db]&source=$_GET[source]");
+        $source1=$_GET['source'];
+	header("Location: reference.php?db=$db2&source=$source1");
   }
 	exit;
 	break;
   case "delete":
-	$row = $db -> getRow("SELECT * FROM $_GET[db] WHERE id='$_GET[id]'");
+        $db3=$_GET['db'];
+        $id3=$_GET['id'];
+	$row = $db -> getRow("SELECT * FROM $db3 WHERE id='$id3'");
 	if(!empty($row['photo'])) @unlink("../logo/".$row['photo']);
 	if(!empty($row['price'])) @unlink("../price/".$row['price']);
-	if(!empty($row['filename'])) @unlink("../".$_GET['db']."/".$row['filename']);
-	if($_GET['db'] == 'items_ref') {
-	  $db -> query("DELETE FROM items_value WHERE rid='$_GET[id]'");
+	if(!empty($row['filename'])) @unlink("../".$db3."/".$row['filename']);
+	if($db3 == 'items_ref') {
+	  $db -> query("DELETE FROM items_value WHERE rid='$id3'");
 	}
-	if($_GET['db'] == 'svva') {
-	  $db -> query("UPDATE items SET svva=REPLACE(svaa,'|".$_GET['id']."|','|') WHERE svva LIKE '%|".$_GET['id']."|%'");
+	if($db3 == 'svva') {
+	  $db -> query("UPDATE items SET svva=REPLACE(svaa,'|".$id3."|','|') WHERE svva LIKE '%|".$id3."|%'");
 	}
-	if($_GET['db'] == 'statu') {
+	if($db3 == 'statu') {
 	  $shops = $db -> getCol("SELECT id FROM shops ORDER BY id");
 	  if(!empty($shops)) {
 		foreach($shops as $val) {
-		  $db -> query("UPDATE items SET statu=REPLACE(statu,'|".$_GET['id']."-".$val."|','|') WHERE statu LIKE '%|".$_GET['id']."-".$val."|%'");
+		  $db -> query("UPDATE items SET statu=REPLACE(statu,'|".$id3."-".$val."|','|') WHERE statu LIKE '%|".$id3."-".$val."|%'");
 		}
 	  }
 	}
-	if($_GET['db'] == 'vendor') {
-	  $db -> query("UPDATE items SET vendor='' WHERE vendor='$_GET[id]'");
+	if($db3 == 'vendor') {
+	  $db -> query("UPDATE items SET vendor='' WHERE vendor='$id3'");
 	}
-	$result = $db -> query("DELETE FROM $_GET[db] WHERE id='$_GET[id]'");
+	$result = $db -> query("DELETE FROM $db3 WHERE id='$id3'");
   if(empty($_GET['source'])) {
 	session_register('delete');
-	header("Location: index.php?op=$table&db=$_GET[db]");
+	header("Location: index.php?op=$table&db=$db3");
   } else {
-	header("Location: reference.php?db=$_GET[db]&source=$_GET[source]");
+        $source=$_GET['source'];
+	header("Location: reference.php?db=$db3&source=$source");
   }
 	exit;
 	break;
 
   default:
  if (!isset($page)) $page="";
-  
+ if (!isset($_GET['source']))  $_GET['source']=""; 
+ if (!isset($val)) $val="";
   if(!empty($_GET['db'])) {
+    $db4=$_GET['db'];
     $page .= $tmpl -> get();
 	$shops = $db -> getAll("SELECT id as shop_id,color FROM shops ORDER BY id");
-	$tmpl -> loadTemplatefile("ref_".$_GET['db'].".inc",true,true);
-	$query = "FROM $_GET[db] ";
+	$tmpl -> loadTemplatefile("ref_".$db4.".inc",true,true);
+	$query = "FROM $db4 ";
 	$result = $db -> query("SELECT * ".$query." ORDER BY id DESC");
 	if($result->numRows()) {
 	  while ($row = $result -> fetchRow()) {
 		if($row['status'] == 'Y') {
 		  $tmpl -> setCurrentBlock("vis");
 		  $tmpl -> setVariable("ids",$row['id']);
-		  $tmpl -> setVariable('db',$_GET['db']);
-		  $tmpl -> setVariable('sources',$_GET['source']);
+		  $tmpl -> setVariable('db',$db4);
+	if (!empty ($_GET['source'])) {
+                  $src1 = $_GET['source'];
+		  $tmpl -> setVariable('sources',$src1);
+         }
 		  $tmpl -> parseCurrentBlock("vis");
 		} else {
 	  	  $tmpl -> setCurrentBlock("inv");
 		  $tmpl -> setVariable("ids",$row['id']);
-		  $tmpl -> setVariable('db',$_GET['db']);
-		 if (!isset($_GET['source']))  $_GET['source']=""; 
+		  $tmpl -> setVariable('db',$db4);
+	if (!empty ($_GET['source'])) {
 		  $tmpl -> setVariable('sources',$_GET['source']);
+                }
 		  $tmpl -> parseCurrentBlock("inv");
 		}
- if (!isset($val)) $val="";
 if(!empty($_GET['source'])) {
 	if(!empty($shops)) {
 	  foreach($shops as $val) {
 		$check = strpos($_GET['val'],"|$row[id]-$val[shop_id]|");
 		if($check !== false) $val['checked'] = ' checked';
 		else $val['checked'] = '';
-		$val['id'] = $row['id'];
+		$val[id] = $row[id];
 		$tmpl -> setCurrentBlock('shop');
 		$tmpl -> setVariable($val);
 		$tmpl -> parseCurrentBlock('shop');
@@ -222,29 +242,39 @@ if(!empty($_GET['source'])) {
 		$tmpl -> setCurrentBlock("list");
 		$tmpl -> setVariable($row);
 		$tmpl -> parseCurrentBlock("list");
-		$tmpl -> free();
+	//	$tmpl -> free();
 	  }
 	} else {
 	  $tmpl->touchBlock('no_list');
 	}
+		$tmpl -> setCurrentBlock("__global__");
 	$tmpl -> setVariable('action',"add");
 	$tmpl -> setVariable('db',$_GET['db']);
 	$tmpl -> setVariable('url',"http://");
+		$tmpl -> parseCurrentBlock();
+
   }
   break;
 }
 if (!isset($_GET['action']))  $_GET['action']="";
 switch ($_GET['action']) {
   case "edit":
+    $db1=$_GET['db'];
+    $id1=$_GET['id'];
 	if(session_is_registered('post')) {
 		if(!empty($post['description'])) $post['description'] = nl2br($post['description']);
 		if(!empty($post['shorttext'])) $post['shorttext'] = nl2br($post['shorttext']);
 		if(!empty($post['bodytext'])) $post['bodytext'] = nl2br($post['bodytext']);
 		if(!empty($post['tech'])) $post['tech'] = nl2br($post['tech']);
+		$tmpl -> setCurrentBlock("__global__");
+
 		$tmpl -> setVariable($post);
+
+		$tmpl -> parseCurrentBlock();
+
 		session_unregister('post');
 	} else {
-	  $row = $db -> getRow("SELECT * FROM $_GET[db] WHERE id = '$_GET[id]'");
+	  $row = $db -> getRow("SELECT * FROM $db1 WHERE id = '$id1'");
 //	$row[title] = htmlspecialchars($row[title],ENT_QUOTES, cp1251);
 	  if(!empty($row['description'])) $row['description'] = str_replace("<br />","",$row['description']);
 	  if(!empty($row['shorttext'])) $row['shorttext'] = str_replace("<br />","",$row['shorttext']);
@@ -254,13 +284,23 @@ switch ($_GET['action']) {
 	  if(!empty($row['author'])) unset($row['author']);
 	  $row['action'] = "edit";
 	  unset($row['photo']);
+		$tmpl -> setCurrentBlock("__global__");
+
 	  $tmpl -> setVariable($row);
+
+		$tmpl -> parseCurrentBlock();
+
 	  break;
 	}
   case "add":
 	if(session_is_registered('post')) {
 		$post['description'] = nl2br($post['description']);
+		$tmpl -> setCurrentBlock("__global__");
+
 		$tmpl -> setVariable($post);
+
+		$tmpl -> parseCurrentBlock();
+
 		session_unregister('post');
 	}
 }
@@ -272,10 +312,15 @@ switch ($_GET['action']) {
 //  echo $page;
 //}
 
-if (!isset($_GET[item_id]))  $_GET[item_id]="";
+if (!isset($_GET['item_id']))  $_GET['item_id']="";
 if(!empty($_GET['source'])) {
+ $item_id=$_GET['item_id'];
+ $source=$_GET['source'];
+ $db1=$_GET['db'];
+	$tmpl -> setCurrentBlock("__global__");
   $tmpl->setVariable($_GET);
-  $select = $db -> getAssoc("SELECT id,name FROM $_GET[db]");
+
+  $select = $db -> getAssoc("SELECT id,name FROM $db1");
   if(!empty($select)) {
 	$select_id=$select_name="";
 	foreach($select as $key => $val) {
@@ -285,7 +330,9 @@ if(!empty($_GET['source'])) {
 	$tmpl -> setVariable('select_id', substr($select_id,0,-2));
 	$tmpl -> setVariable('select_name', substr($select_name,0,-2));
   }
-  $tmpl -> setVariable('description',$db->getOne("SELECT description FROM description WHERE id='$_GET[item_id]' AND source='$_GET[source]'"));
+  $tmpl -> setVariable('description',$db->getOne("SELECT description FROM description WHERE id='$item_id' AND source='$source'"));
+	$tmpl -> parseCurrentBlock();
+
   $page=$tmpl->get();
   echo $page;
 }

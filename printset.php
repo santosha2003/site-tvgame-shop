@@ -16,7 +16,7 @@ switch ($_GET[action]) {
         $tmpl -> setCurrentBlock('select');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('select');
-         $tmpl -> free();
+    //     $tmpl -> free();
      }
      }
 

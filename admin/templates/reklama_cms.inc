@@ -6,6 +6,7 @@
 
 <p class=th>Установка рекламных статей</p>
 <hr>
+<!-- BEGIN reklama -->
 <p class=t>Отметьте статьи которые ассоциируются с этим товаром.</p>
 
 <form action=reklama_cms.php method=POST>
@@ -17,6 +18,7 @@
 <input type=hidden name=call value={call}>
 <input type=hidden name=val value={val}>
 <p align=center><input type=submit value="Внести изменения"></p>
+<!-- END reklama -->
 
 <div class=t align=right width=100%><a href="javascript:window.close();">Вернуться к списку товаров</a></div>
 

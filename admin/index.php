@@ -8,7 +8,7 @@ $se= session_save_path();
 
 echo 'username '; print_r ($username); echo 'role: ';
 
-print_r ($_SESSION);
+//print_r ($_SESSION);
 //print_r ($sessionConfig);
 //print_r ($session_status);
 
@@ -25,7 +25,6 @@ if (isset($_SESSION['auth']['perm'])) {
    echo "<br />  {$nam_sess} ";
    echo "<br /> previous  {$previous_name}";
   echo "<br /> store to {$sess_save_p}";
-  echo "<br /> {$_SESSION['name']}";
   echo "<br /> cookie path (relative to site root) {$cookieParam['path']} <br /> "; 
  } else {
  echo "<br /> проверка пройдена‚, <b>SHOP_ADM</b> sessia BROKEN <br />"; //{($_SESSION[_auth_shop_adm][challengekey])
@@ -300,7 +299,7 @@ if (isset($_GET['op'])) {
      $tmpl -> setCurrentBlock("list");
      $tmpl -> setVariable($row);
      $tmpl -> parseCurrentBlock("list");
-     $tmpl->free();
+//     $tmpl->free();
      }
     if (isset($update)) {
       if($update) {
@@ -342,7 +341,7 @@ if (isset($_GET['op'])) {
      }
    break;   
    default:
-   $tmpl -> loadTemplatefile("body.inc",true,false);    
+  $tmpl -> loadTemplatefile("body.inc",true,true);
  }
 
 }
@@ -355,14 +354,16 @@ $page .= $tmpl -> get();
 $_SESSION["firstname"] = $au;
 $_SESSION["lastname"] = $gsid;
 
-$tmpl -> loadTemplatefile("body.inc",true,true);
-
 $user1=$_SESSION["firstname"];
 $pw1=$_SESSION["lastname"];
-echo 'Hi, ' . $user1 . ' ' . $pw1 . '   ';
 
-           $tmpl -> setCurrentBlock("u_sess");
-          $tmpl -> parseCurrentBlock("u_sess");
+$tmpl -> loadTemplatefile("body.inc",true,true);
+
+echo 'Hi, ' . $user1 . ' ' . $pw1 . '   ';
+      // $tmpl -> touchBlock("usess");
+          //$tmpl -> parseCurrentBlock("usess");
+           $tmpl -> setCurrentBlock("usess");
+          $tmpl -> parseCurrentBlock();
      $tmpl -> setVariable('user1',$user1);
      $tmpl -> setVariable('pw1',$pw1);
 register_globals ();
@@ -371,7 +372,7 @@ register_globals ();
 session_commit ();
 
 $page .= $tmpl -> get();
-$tmpl -> loadTemplatefile("footer.inc",true,false);
+$tmpl -> loadTemplatefile("footer.inc",true,true);
 $page .= $tmpl -> get();
 
 echo $page;

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("./auth.php");
 
 if($_POST['op'] != 'cngreg') {

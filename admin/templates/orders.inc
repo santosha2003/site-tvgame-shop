@@ -33,9 +33,9 @@
 <fieldset>
 <legend class=th>&nbsp;&nbsp;Заказ N {zid} | {date_zid}&nbsp;&nbsp;</legend>
 <font class=t>
-Клиент : <a href="javascript:pop_win('users_edit.php?id={uid}', '', 600, 600);">{fio}</a>&nbsp;&nbsp;&nbsp;&nbsp;[ <a href="mailto:{email}?subject=order#{zid}">написать письмо</a> ]<br>
+Клиент : <a href="javascript:pop_win('users_edit.php?id = {uid} ', '', 600, 600);">{fio}</a>&nbsp;&nbsp;&nbsp;&nbsp;[ <a href="mailto:{email}?subject=order#{zid}">написать письмо</a> ]<br>
 Адрес доставки: {country}, {city}, {address}<br>
-Телефон: {phone}<br>
+Телефон: {phone} {uid} <br>
 Доставить: {date_delivery} {time_delivery}
 </font>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -69,7 +69,7 @@
                 </td>
               </tr>
             </table>
-            
+
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr> 
                 <td><img src="images/1p.gif" width="1" height="5"></td>

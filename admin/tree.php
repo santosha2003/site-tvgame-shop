@@ -6,11 +6,14 @@ if($_SESSION['auth']['perm'] != 'oper') {
   exit;
 }
   
+
 //print_r($_GET);
 //print_r($_POST);
 
-if(empty($_GET[cid])) $_GET[cid] = 2;
+(string) $cid;
+if(empty($_GET["cid"])) $_GET["cid"] = 2;
 
+$cid= $_GET["cid"];
 ?>
 <html>
 <head>
@@ -23,15 +26,15 @@ if(empty($_GET[cid])) $_GET[cid] = 2;
 <table width=100% border=1 bgcolor="#FFFFFF" bordercolor="#F0F0F0" style="border-collapse: collapse;">
 <?
 if (!isset($str))  $str="";
-echo "<tr><td>".$str."<a class=th href='#' onClick='javascript:window.opener.location.href=\"index.php?op=item&parent=".$_GET[cid]."\"'>".$db -> getOne("SELECT name FROM category WHERE id = '$_GET[cid]'")."</td></tr>";
-$ree = $db -> getAll("SELECT * FROM items WHERE cid='$_GET[cid]'");
+echo "<tr><td>".$str."<a class=th href='#' onClick='javascript:window.opener.location.href=\"index.php?op=item&parent=".$cid."\"'>".$db -> getOne("SELECT name FROM category WHERE id = '$cid'")."</td></tr>";
+$ree = $db -> getAll("SELECT * FROM items WHERE cid='$cid'");
 if(!empty($ree)) {
   foreach($ree as $row) {
     if (!isset($str))  $str="";
     echo "<tr><td class=t>&nbsp;&nbsp;&nbsp;&nbsp;".$str."<a href='#' onClick='javascript:window.opener.location.href=\"index.php?op=item&action=item_edit&id=".$row['id']."&parent=".$row['cid']."\"'>".$row['name']." ".$row['model']." ".$row['article']."</a></td></tr>";
   }
 }
-viewvetka($_GET[cid]);
+viewvetka($cid);
 
 ?>
 </table>

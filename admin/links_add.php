@@ -1,4 +1,4 @@
-<?
+<?php
  require_once("./auth.php");
 
 if (!isset($_POST['mode']))  $_POST['mode']="";
@@ -52,7 +52,7 @@ if(!empty($row)) {
         $tmpl -> setCurrentBlock('select');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('select');
-        $tmpl -> free();
+    //    $tmpl -> free();
   }
 }
 

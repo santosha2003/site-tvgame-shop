@@ -10,18 +10,15 @@ echo "<pre>" ;
  print_r ($_GET);
   echo "</pre>";
 
-$tmpl -> loadTemplatefile('catalog.inc',true,true);
+$tmpl -> loadTemplatefile('catalog.inc',false,false);
 
 if (!isset ($_POST['action']))  $_POST['action']="";
-if (!isset ($_GET['action']))  $_GET['action']="";
+ if (!isset ($_POST['parent']))  $_POST['parent']="2";
+ $parent= $_POST['parent'];  //$_POST[parent] upper level in catalog tree
 
 switch ($_POST['action']) {
 
-
   case "reshop":
-
- if (!isset ($_POST['parent']))  $_POST['parent']="2";
- $parent= $_POST['parent'];  //$_POST[parent] upper level in catalog tree
 
         $shops = $db -> getCol("SELECT id FROM category WHERE parent='$parent' ORDER BY updown");
         $db -> query("UPDATE category SET shops='|1|2|3|4|' WHERE parent='$parent'");
@@ -45,7 +42,6 @@ switch ($_POST['action']) {
 
   case "updown":
 
- $parent= $_POST['parent'];
         if(!empty($_POST['updown'])) {
           foreach($_POST['updown'] as $key => $val) {
                 if(empty($key) OR empty($val)) continue;
@@ -113,18 +109,20 @@ $id= $_POST['id'];
         break;
 }
 
-
+if (!isset ($_GET['action'])) $_GET['action']="";
+if (!isset ($_GET['id'])) $_GET['id']="";
+  $id=$_GET['id'];
 if (isset($_GET['parent'])) $parent=$_GET['parent'];
 // drawing list of categories
-
 if(!isset($row['parent'])) $row['parent']="";
-if(!isset($parent) OR $parent == 2) {
+if(!isset($_GET['parent']) OR $_GET['parent'] == 2) {
   $parent=2;
   $row['title'] = "";
 } else {
   $row = $db -> getRow("SELECT * FROM category WHERE id='$parent'");
   $children['parent'] = $row['parent'];
   $row['title'] = $row['name'];
+ if (isset ($children['id']) AND ( $children['id'] != 0)) {
    while ( $children['parent'] != 0) {
         $id1=$children['id'];
         $chilid1=$children['parent'];
@@ -132,22 +130,22 @@ if(!isset($parent) OR $parent == 2) {
         $children = $db -> getRow("SELECT * FROM category WHERE id='$chilid1'");
         $row['title'] = "<a href=index.php?op=catalog&parent=$id1></a> :: $chname ". $row['title'];
    }
+  } 
   $row['title'] = $row['title'];               //??
   $tmpl -> setCurrentBlock('up_parent');
   $tmpl->setVariable('up_parent',$row['parent']);  //line 102  add (notice in log) ,the same name - block in template catalog.inc and variable name  ok?
   $tmpl -> parseCurrentBlock('up_parent');
   }
-  
+
 $row['count'] = $db -> getOne("SELECT COUNT(cid) FROM items WHERE cid = '1'");
 $tmpl -> setCurrentBlock('header');
 if (isset ($warning)) $row['warning'] = $warning;
 
-//print_r ($row);
+print_r ($row);
 
 $tmpl -> setVariable($row);
 $tmpl -> parseCurrentBlock('header');
-$tmpl->free();
-
+//$tmpl->free();   //php7.2 'page' not compose now
 
 $shops = $db -> getAll("SELECT id as shop_id,color FROM shops ORDER BY id");
 $result = $db -> query("SELECT * FROM category WHERE parent='$parent' ORDER BY updown");
@@ -185,23 +183,20 @@ while ($row = $result -> fetchRow()) {
   $tmpl -> setCurrentBlock("list");
   $tmpl -> setVariable($row);
   $tmpl -> parseCurrentBlock("list");
-  $tmpl -> free();
+//  $tmpl -> free();
 }
 
-if (!isset ($_GET['action'])) $_GET['action']="";
 
 switch ($_GET['action']) {
   case "edit_cat":
 
-  $id=$_GET['id'];
- $parent=$_GET['parent'];
           $rows = $db -> getRow("SELECT * FROM category WHERE id = '$id'");
           $rows['action'] = "edit_cat";
 //          $tmpl -> setVariable($rows);
           $tmpl -> setCurrentBlock("submit_edit");
           $tmpl -> setVariable('sedit',"submit");
           $tmpl -> parseCurrentBlock("submit_edit");
-          $tmpl -> free();
+//          $tmpl -> free();   //no auto add to page - php7.2 
           $tmpl -> setVariable('action',"edit_cat");
           $tmpl -> setVariable('parent',$rows['parent']);
           $tmpl -> setVariable('id',$rows['id']);
@@ -216,9 +211,6 @@ switch ($_GET['action']) {
         break;
 
   case "del_cat":
-
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
 
     function viewvetka($id) {
       GLOBAL $db, $form;
@@ -257,9 +249,6 @@ switch ($_GET['action']) {
 
   case "vis_cat":
 
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-
                 function viewvetka_vis($id) {
                   GLOBAL $db, $form;
                   $result = $db -> query("SELECT * FROM category WHERE parent='$id'");
@@ -284,9 +273,6 @@ switch ($_GET['action']) {
 
   case "inv_cat":
 
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-
                 function viewvetka_inv($id) {
                   GLOBAL $db, $form;
                   $result = $db -> query("SELECT * FROM category WHERE parent='$id'");
@@ -302,7 +288,7 @@ switch ($_GET['action']) {
                   }
                 }
 
-          viewvetka_inv($_GET['id']);
+          viewvetka_inv($id);
                           $result = $db -> query("UPDATE category SET status='N' WHERE id='$id'");
                           $result = $db -> query("UPDATE items SET tmp_status=status, status='N' WHERE cid='$id'");
           header("Location: index.php?op=catalog&parent=$parent");
@@ -311,9 +297,6 @@ switch ($_GET['action']) {
 
   case "bottom_off":
 
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-
     $result = $db -> query("UPDATE category SET bottom='Y' WHERE id='$id'");
         header("Location: index.php?op=catalog&parent=$parent");
         exit;
@@ -321,20 +304,16 @@ switch ($_GET['action']) {
 
   case "bottom_on":
 
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-
     $result = $db -> query("UPDATE category SET bottom='N' WHERE id='$id'");
         header("Location: index.php?op=catalog&parent=$parent");
         exit;
         break;
 
   default:
-  $parent=$_GET['parent'];
 
            if (!isset($error)) $error="";
            $post = $_POST;
-          //$tmpl -> setVariable($_POST);
+          $tmpl -> setVariable($post);
           //$tmpl -> free();
           $tmpl -> setCurrentBlock("submit_add");
           $tmpl -> setVariable('sadd',"submit");

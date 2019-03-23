@@ -76,7 +76,7 @@ if(!empty($row)) {
         $tmpl -> setCurrentBlock('list_cat');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('list_cat');
-        $tmpl -> free();
+    //    $tmpl -> free();
   }
 }
 

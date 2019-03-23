@@ -1,19 +1,20 @@
 <?php
 require_once('./auth.php');
 if(!isset($_GET['action'])) $_GET['action']="";
+$id=$_GET['id'];
 switch($_GET['action']) {
   case 'vis':
-	$result = $db -> query("UPDATE users SET status='Y' WHERE id = '$_GET[id]'");
+	$result = $db -> query("UPDATE users SET status='Y' WHERE id = '$id'");
   	header("Location: index.php?op=users");
 	exit;
 	break;
   case 'inv':
-	$result = $db -> query("UPDATE users SET status='N' WHERE id = '$_GET[id]'");
+	$result = $db -> query("UPDATE users SET status='N' WHERE id = '$id'");
   	header("Location: index.php?op=users");
 	exit;
 	break;
   case 'del':
-	$result = $db -> query("DELETE FROM users WHERE id = '$_GET[id]'");
+	$result = $db -> query("DELETE FROM users WHERE id = '$id'");
 	header("Location: index.php?op=users");
 	exit;
 	break;

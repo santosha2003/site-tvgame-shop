@@ -80,7 +80,7 @@ switch ($_POST['action']) {
                 foreach($_POST['shops'][$id] as $key => $val) {
                   $shp .= "$key|";
                 }
-                $db -> query("UPDATE content SET shops='$shp' WHERE id='$id'");
+                $db -> query("UPDATE content SET shops='$shp' WHERE id='$id'");  // 1||3|    test php7.2 ( shop ID where goods present)
           } else {
                 $db -> query("UPDATE content SET shops='' WHERE id='$id'");
           }
@@ -219,8 +219,11 @@ if($parent == 1) {
   $children['pid'] = $row['pid'];
   $path = " / ".$row['url'];
   while ( $children['pid'] != 1) {
-        $children = $db -> getRow("SELECT * FROM content WHERE id='$children[pid]'");
-        $path = " / <a href=index.php?op=cms&parent=$children[id]>$children[url]</a>". $path;
+        $chi = $children['pid'];
+        $childid = $children['id'];
+        $childurl = $children['url'];
+        $children = $db -> getRow("SELECT * FROM content WHERE id='$chi'");
+        $path = " / <a href=index.php?op=cms&parent=$childid>$childurl</a>". $path;
   }
   $tmpl->setVariable('up_parent',$row['pid']);
 }

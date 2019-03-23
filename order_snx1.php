@@ -12,11 +12,11 @@ if(empty($content)) {
 
 $tmpl -> loadTemplatefile("order_mail.html",true,true);
 
-// ÎÏÍÅÒ ÚÁËÁÚÁ
+// íîìåğ çàêàçà // ÎÏÍÅÒ ÚÁËÁÚÁ
   $zid = $db -> nextId('orders');
   $missing = array();
 
-// ÓÏÈÒÁÎÅÎÉÅ ÄÁÎÎÙÈ Ï ÚÁËÁÚÁÎÙÈ ĞÒÏÄÕËÔÁÈ
+// ñîõğàíåíèå äàííûõ î çàêàçàíûõ ïğîäóêòàõ // ÓÏÈÒÁÎÅÎÉÅ ÄÁÎÎÙÈ Ï ÚÁËÁÚÁÎÙÈ ĞÒÏÄÕËÔÁÈ
   foreach($content as $val) {
 
 
@@ -35,7 +35,7 @@ if(!empty($sp)) $item[sp] = " [Cğ] ";
         $tmpl -> setVariable($item);
         $tmpl -> parseCurrentBlock('list');
   }
-// ÓÏÈÒÁÎÅÎÉÅ ÄÁÎÎÙÈ Ï ÚÁËÁÚÅ
+// ñîõğàíåíèå äàííûõ î çàêàçå // ÓÏÈÒÁÎÅÎÉÅ ÄÁÎÎÙÈ Ï ÚÁËÁÚÅ
   $_POST[zid] = $zid;
   $_POST[uid] = "Íåçàğåãèñòğèğîâàííûé ïîêóïàòåëü";
   $_POST[date_zid] = date("Y-m-d H:i:s",time());
@@ -77,10 +77,10 @@ if(!empty($sp)) $item[sp] = " [Cğ] ";
         $tmpl -> setVariable($_POST);
    $db -> query("INSERT INTO orders ( zid, uid, date_zid, fio, country, city, phone, discont, address, metro, date_delivery, time_delivery, description, summa, status )
    values('$zid', '$_POST[uid]', '$_POST[data_zid]', '$fio', '$country', '$city', '$phone', '$discont', '$address', '$metro', '$_POST[date_delivery]', '$_POST[time_delivery]', '$description', '$_POST[summa]', '$_POST[status]')");
-// ÕÄÁÌÅÎÉÅ ÔÏ×ÁÒÏ× ÉÚ ËÏÒÚÉÎÙ
+// óäàëåíèå òîâàğîâ èç êîğçèíû // ÕÄÁÌÅÎÉÅ ÔÏ×ÁÒÏ× ÉÚ ËÏÒÚÉÎÙ
   $cart -> clear_cart();
 
-// ÏÔĞÒÁ×ËÁ ÎÁ e-mail ËÌÉÅÎÔÕ É ÏĞÅÒÁÔÏÒÕ
+// îòïğàâêà íà e-mail êëèåíòó è îïåğàòîğó // ÏÔĞÒÁ×ËÁ ÎÁ e-mail ËÌÉÅÎÔÕ É ÏĞÅÒÁÔÏÒÕ
 
 
         $mail = $tmpl -> get();

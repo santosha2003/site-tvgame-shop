@@ -84,12 +84,13 @@ if(!empty($shops)) {
         $tmpl -> setCurrentBlock("rating");
         $tmpl -> setVariable("tdid",$shop['id']);
         $tmpl -> parseCurrentBlock("rating");
-        $tmpl -> free();
+    //    $tmpl -> free();
   }
 }
 
 $tmpl -> setVariable("size",sizeof($shops));
-$tmpl->parse();
+$tmpl -> parseCurrentBlock("__global__");
+//$tmpl->parse();
 $tmpl->show();
 
 ?>

@@ -1,5 +1,6 @@
 <?php
 // go php5 28.08.2009
+// php7.2 20.3.2019
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_cookies', 1);
 
@@ -104,8 +105,9 @@ else
 if (!isset ($_GET['op'])) $_GET['op']="";
   if($_GET['op'] == 'catalog') {
   if(!empty($_GET['pid'])) $_GET['cid'] = $_GET['pid'];
-  $row = $db -> getOne("SELECT name FROM category WHERE id='$_GET[cid]' AND status='Y'");
-   $rows = $db -> getOne("SELECT supertitle FROM category WHERE id='$_GET[cid]' AND status='Y'");
+  $cid=$_GET['cid'];
+  $row = $db -> getOne("SELECT name FROM category WHERE id='$cid' AND status='Y'");
+   $rows = $db -> getOne("SELECT supertitle FROM category WHERE id='$cid' AND status='Y'");
   if(!empty($row))
         $tmpl->setVariable('title',$row." - ");
         $tmpl->setVariable('supertitle',$rows);
@@ -128,10 +130,11 @@ if (!isset ($_GET['op'])) $_GET['op']="";
   }
 
 if(!empty($_GET['id'])){
-  $rows = $db -> getOne("SELECT name FROM items WHERE id='$_GET[id]' AND status='Y'");
-  $rowa = $db -> getOne("SELECT mark FROM items WHERE id='$_GET[id]' AND status='Y'");
-  $rowz = $db -> getOne("SELECT model FROM items WHERE id='$_GET[id]' AND status='Y'");
-  $rowcat = $db -> getOne("SELECT cid FROM items WHERE id='$_GET[id]' AND status='Y'");
+ $id=$_GET['id'];
+  $rows = $db -> getOne("SELECT name FROM items WHERE id='$id' AND status='Y'");
+  $rowa = $db -> getOne("SELECT mark FROM items WHERE id='$id' AND status='Y'");
+  $rowz = $db -> getOne("SELECT model FROM items WHERE id='$id' AND status='Y'");
+  $rowcat = $db -> getOne("SELECT cid FROM items WHERE id='$id' AND status='Y'");
   $rowcat1 = $db -> getOne("SELECT supertitle FROM category WHERE id='$rowcat' AND status='Y'");
   if(!empty($rows))
         $tmpl->setVariable('title',$rows." ".$rowa." ".$rowz." - ");
@@ -206,7 +209,7 @@ switch($_GET['op']) {
   case "cngreg":
         if ($a->getAuth()) {
           $tmpl -> loadTemplatefile("register.inc",true,true);
-          $row = $db -> getRow("SELECT * FROM users WHERE id='".$_SESSION[auth][id]."'");
+          $row = $db -> getRow("SELECT * FROM users WHERE id='".$_SESSION['auth']['id']."'");
           $tmpl -> setVariable($row);
           $tmpl -> setVariable('action',"cngreg");
           $tmpl -> setVariable('disab'," disabled");
@@ -382,29 +385,33 @@ function termometr($cid,$cut=false) {
   GLOBAL $db, $_GET;
 
   if(!empty($_GET['id'])) {
-        $cid = $db->getOne("SELECT cid FROM items WHERE id='$_GET[id]'");
+  $id=$_GET['id'];
+        $cid = $db->getOne("SELECT cid FROM items WHERE id='$id'");
   }
   $row = $db -> getRow("SELECT * FROM category WHERE id='$cid'");
-  $children[parent] = $row[parent];
+  $children['parent'] = $row['parent'];
   if(!$cut) {
         if(!empty($_GET['id']))
-          $row[title] = "<a href=index.php?op=catalog&pid=".$db->getOne("SELECT cid FROM items WHERE id='$_GET[id]'").">$row[name]</a>";
+          $row['title'] = "<a href=index.php?op=catalog&pid=".$db->getOne("SELECT cid FROM items WHERE id='$id'").">$row[name]</a>";
         else
-         $row[title] = $row[name];
+         $row['title'] = $row['name'];
   }
 
-  if($children[parent] != 2) {
-  while ( $children[parent] != 0) {
-        $children = $db -> getRow("SELECT * FROM category WHERE id='$children[parent]'");
-        if($children[parent] == '2') {
-          $row[title] = " <a href=index.php?op=catalog&pid=$children[id]>$children[name]</a>&nbsp;|&nbsp;". $row[title];
+  if($children['parent'] != 2) {
+  while ( $children['parent'] != 0) {
+    $chi=$children['parent'];
+    $chid=$children['id'];
+    $chname=$children['name'];
+        $children = $db -> getRow("SELECT * FROM category WHERE id='$chi'");
+        if($chi == '2') {
+          $row['title'] = " <a href=index.php?op=catalog&pid=$chid>$chname</a>&nbsp;|&nbsp;". $row['title'];
         } else {
-          $row[title] = " <a href=index.php?op=catalog&cid=$children[id]>$children[name]</a>&nbsp;|&nbsp;". $row[title];
+          $row['title'] = " <a href=index.php?op=catalog&cid=$chid>$chname</a>&nbsp;|&nbsp;". $row['title'];
         }
   }
-  $row[title] = substr($row[title],53);
+  $row['title'] = substr($row['title'],53);
   }
-  RETURN $row[title];
+  RETURN $row['title'];
 }
 
 function sendmail($from,$to,$subj,$text) {

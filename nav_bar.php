@@ -4,6 +4,11 @@
 //============================
 // before include check _GET vaiables copy to $filter 
 
+if (!isset ($prev_list))  $prev_list='';
+if (!isset ($pages))  $pages=1;
+if (!isset ($next_list))  $next_list='';
+//if (!isset ($query))  $query="";
+if (!isset ($direct_bar))  $direct_bar= '';
 $TotalLink = $db->getOne("SELECT COUNT(*) ".$query);
 
 if(empty($c_pagenum)) $c_pagenum = 10;
@@ -26,15 +31,16 @@ if (!empty ($_SESSION['sess_search']['search'])) {
 
 $page_num = ceil($TotalLink / $c_pagenum);
 
+
 if ($pages > $page_num) $pages = $page_num;
 
 $pages = $pages ? $pages : 1;
 $vstart = $c_pagenum * ($pages-1);
 $page_start = floor(($pages-1)/ $c_pagenum ) * $c_pagenum; 
 $page_end = $page_start + $c_pagenum; 
-for ($p=$page_start+1 ; ($p <= $page_end) && ($p <= $page_num)  ; $p++ ) {	
+
+for ($p=$page_start+1 ; ($p <= $page_end) && ($p <= $page_num)  ; $p++ ) {
   if ($pages == $p)	$direct_bar .= " <font class=active>$p</font> ";
- //if ($pages == 1)	$direct_bar .= " <font class=active>$p</font> ";
   else $direct_bar .= " <a href='?pages=$p$extra'>$p</a> ";
 }
 if ($TotalLink > $vstart+$c_pagenum ) {

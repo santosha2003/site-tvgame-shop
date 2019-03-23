@@ -46,7 +46,7 @@ if(!empty($row)) {
         $tmpl -> setCurrentBlock('list_cat');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('list_cat');
-        $tmpl -> free();
+    //    $tmpl -> free();
   }
 }
 
@@ -66,7 +66,7 @@ if(!empty($row)) {
         $tmpl -> setCurrentBlock('list_items');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('list_items');
-        $tmpl -> free();
+    //    $tmpl -> free();
   }
 }
 

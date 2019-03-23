@@ -16,9 +16,9 @@
 
 <!-- BEGIN main_move -->
 <font face=arial size=2>
-<b><font size=3>Перенос товара в другой каталог</font></b>
+<b><font size=3 color="gray">Перенос товара в другой каталог</font></b>
 <hr noshade>
-Перенос товара <a href="javascript:pop_win('../product.php?tid={id}', '', 500, 550);">{name}</a> в другой каталог
+Перенос товара N {id} <a href="javascript:pop_win('../index.php?id={id}', '', 500, 550);"><font color="green">{name}</font></a> в другой каталог
 <!-- END main_move -->
 
 <!-- BEGIN main_allmove -->
@@ -30,7 +30,7 @@
 <font face=arial size=2>
 <b><font size=3>Интересные товары</font></b>
 <hr noshade>
-Установки "интересного товара" для <a href="javascript:pop_win('../product.php?tid={id}', '', 500, 550);">{name}</a>
+Установки "интересного товара" для <a href="javascript:pop_win('../index.php?id={id}', '', 500, 550);">{name}</a>
 <!-- END main_interes -->
 
 <!-- BEGIN main_category -->
@@ -41,11 +41,15 @@
 </font>
 <!-- END main_category -->
 
+
+<!-- BEGIN acti -->
 <form name=interes action=interes.php method=post>
 <input type=hidden name=id value={id}>
 <input type=hidden name=action value={action}>
 <input type=hidden name=parent value={parent}>
 <input type=hidden name=pages value={pages}>
+<!-- END acti -->
+
 <!-- BEGIN group -->
   <input type=hidden name=id[] value={id}>
 <!-- END group -->

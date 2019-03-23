@@ -10,7 +10,7 @@
 <tr>
 <td valign=top class=t align=center>
 
-	<div class=th>Даные клиента</div>
+	<div class=th>Данные клиента</div>
 	
 <!-- BEGIN dupe -->
   <div class="error">Такое имя пользователя уже используется</div>
@@ -29,8 +29,8 @@
 <form action=users_edit.php method=post>
 <input type="hidden" name="id" value="{id}">
   <tr>
-	<td class="tb">E-Mail (Логин)</td>
-	<td class="t"><a href="mailto:{username}">{username}</a></td>
+	<td class="tb">E-Mail (Логин)<a href="mailto:{username}">{username}</a></td></td>
+	<td class="t"><input type="text" name="username" value="{username}" maxlenght="128" class="t" style="width: 200px;"></td>
   </tr>
   <tr>
 	<td class="tb">Пароль</td>

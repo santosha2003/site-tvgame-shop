@@ -3,7 +3,7 @@
 require_once("./auth.php");
 
 if (!isset($_POST['module']))  $_POST['module']="";
-//if (!empty($_POST['module'])) $_POST['module']="";
+
 switch($_POST['module']) {
   case "updel":
 

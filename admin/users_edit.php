@@ -1,4 +1,4 @@
-<? 
+<?php
 require_once('./auth.php');
 
 $tmpl -> loadTemplatefile("users_edit.inc",true,true);
@@ -15,7 +15,8 @@ if(isset($_POST['id']) AND is_array($_POST)) {
 	}
   }
   if(!isset($_POST['username'])) $_POST['username']="";
-  $dupe = $db -> getOne("SELECT username FROM users WHERE username='$_POST[username]'");
+  $uname=$_POST['username'];
+  $dupe = $db -> getOne("SELECT username FROM users WHERE username='$uname'");
   if(!empty($dupe)) {
 	$error = true;
 	$tmpl -> touchBlock('dupe');
@@ -30,13 +31,13 @@ if(isset($_POST['id']) AND is_array($_POST)) {
     exit;
   }
 }
-  
+
 
 if($error) {
   $_GET['id'] = $_POST['id'];
 }
-
-$row = $db -> getRow("SELECT * FROM users WHERE id='$_GET[id]'");
+$id=$_GET['id'];
+$row = $db -> getRow("SELECT * FROM users WHERE id='$id'");
 if(!isset($row['business'])) $row['business']="";
 $row['business'] = str_replace("|","<br>",$row['business']);
 if(!isset($row['service'])) $row['service']="";

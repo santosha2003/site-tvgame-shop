@@ -42,7 +42,7 @@ if(!isset($_GET['pid'])) $_GET['pid']="";
 	$tmpl -> touchBlock('cat_separator');
 	$tmpl -> setCurrentBlock("list");
 	$tmpl -> parseCurrentBlock("list");
-	$tmpl -> free();	
+//	$tmpl -> free();	
   }
 } else {
   $tmpl -> touchBlock('cat_separator');

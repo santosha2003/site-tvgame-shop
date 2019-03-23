@@ -26,15 +26,23 @@ if($_SESSION['auth']['perm'] != 'oper') {
 
 
 //echo "<pre>";
-//print_r ($_POST);
-//print_r ($_GET);
+print_r ($_POST);
+print_r ($_GET);
 //print_r ($_SESSION);
 //echo "</pre>";
 
 
 if (!isset($_GET['action']))  $_GET['action']="";
+if (!isset($_GET['id']))  $_GET['id']="";
+if (!isset($_GET['parent']))  $_GET['parent']="";
+
 if (empty ($_GET['pages'])) $_GET['pages']= 1;
+  $id=$_GET['id'];
+  $parent=$_GET['parent'];
+  $pages=$_GET['pages'];
+
 switch ($_GET['action']) {
+
   case "add":
         $tmpl -> loadTemplatefile("item_add.inc",true,true);
         include("item_add.php");
@@ -46,9 +54,6 @@ switch ($_GET['action']) {
         break;
 
   case "item_vis":
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-  $pages=$_GET['pages'];
 
           $result = $db -> query("
                 UPDATE items
@@ -70,9 +75,6 @@ switch ($_GET['action']) {
         break;
 
   case "item_inv":
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-  $pages=$_GET['pages'];
 
           $result = $db -> query("
                 UPDATE items
@@ -91,11 +93,10 @@ switch ($_GET['action']) {
                 WHERE id='$id'");
           header("Location: index.php?op=item&parent=$parent&pages=$pages");
         break;
+
  // Яндекс маркет
   case "item_ymly":
-$id=$_GET['id'];
-$parent=$_GET['parent'];
-$pages=$_GET['pages'];
+
           $result = $db -> query("
                 UPDATE items
                 SET market_show='Y'
@@ -104,34 +105,34 @@ $pages=$_GET['pages'];
         break;
 
   case "item_ymln":
-$id=$_GET['id'];
-$parent=$_GET['parent'];
-$pages=$_GET['pages']; 
+
          $result = $db -> query("
                 UPDATE items
                 SET market_show='N'
                 WHERE id='$id'");
           header("Location: index.php?op=item&parent=$parent&pages=$pages");
         break;
-  case "item_delete":
-  $id=$_GET['id'];
-  $parent=$_GET['parent'];
-  $pages=$_GET['pages'];
 
-          item_delete($_GET['id']);
+  case "item_delete":
+
+          item_delete($id);
           session_register('delete');
           header("Location: index.php?op=item&parent=$parent&pages=$pages");
         break;
 }
 
 if (!isset($_POST['action']))  $_POST['action']="";
-switch ($_POST['action']) {
-  case "reshop":
-  //$_POST [] op pages parent updown ($item_id=>$sort.. 1-x) shops($id=>$key=>"on" or empty) action="reshop"
-  // if(empty($_POST['pages'])) $_POST['pages'] = 1;
- //if(empty($_POST[parent])) $_POST[parent] = 2;
+  if(!isset($_POST['pages'])) $_POST['pages'] = 1;
+ if(!isset($_POST['parent'])) $_POST['parent'] = '';
  $parent= $_POST['parent'];  //$_POST[parent]
  $pages=$_POST['pages'];
+
+switch ($_POST['action']) {
+
+  case "reshop":
+
+  //$_POST [] op pages parent updown ($item_id=>$sort.. 1-x) shops($id=>$key=>"on" or empty) action="reshop"
+
  $op="item";
     $c_pagenum = $db->getOne("SELECT value FROM settings WHERE id='20'");
 //$vstart defined in nav_bar.php, here no need to display
@@ -141,7 +142,7 @@ switch ($_POST['action']) {
 
         if(!empty($shops) AND is_array($shops)) {
           foreach($shops as $id) {
-        $db -> query("UPDATE category SET shops='|1|2|3|4|' WHERE parent='$_POST[parent]'");
+        $db -> query("UPDATE category SET shops='|1|2|3|4|' WHERE parent='$parent'");
                 $shp = "|";
                 if(!empty($_POST['shops'][$id])) {
                   foreach($_POST['shops'][$id] as $key => $val) {
@@ -158,9 +159,7 @@ switch ($_POST['action']) {
         break;
 
   case "item_reorder":
- 
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
+
         if(is_array($_POST['updown'])) {
           foreach($_POST['updown'] as $key => $val) {
                 $db -> query("UPDATE items SET updown='$val' WHERE id='$key'");
@@ -170,9 +169,7 @@ switch ($_POST['action']) {
         break;
 
   case "item_alldell":
-  
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
+
         if(is_array($_POST['item_del'])) {
           foreach($_POST['item_del'] as $val) {
                 item_delete($val);
@@ -183,8 +180,6 @@ switch ($_POST['action']) {
 
   case "item_allvis":
 
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
         if(is_array($_POST['item_del'])) {
           foreach($_POST['item_del'] as $val) {
                 $db -> query("
@@ -209,8 +204,6 @@ switch ($_POST['action']) {
 
   case "item_allinv":
 
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
         if(is_array($_POST['item_del'])) {
           foreach($_POST['item_del'] as $val) {
                 $db -> query("
@@ -233,10 +226,9 @@ switch ($_POST['action']) {
         header("Location: index.php?op=item&parent=$parent&pages=$pages");
         break;
 //old $HTTP_POST_VARS
+
   case "item_unikum":
 
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
         $un = $db -> query("UPDATE items SET unikum='' WHERE cid='$parent'");
         if (!empty($_POST['unikum'])) {
           foreach($_POST['unikum'] as $key => $val) {
@@ -248,8 +240,6 @@ switch ($_POST['action']) {
 
   case "item_allmove":
 
- $parent=$_POST['parent'];
- $pages=$_POST['pages'];
         if(is_array($item_del)) {
       $url = "interes.php?action=allmove&parent=$parent";
           foreach($item_del as $val) {
@@ -262,9 +252,12 @@ switch ($_POST['action']) {
 }
 
 if (!isset($_GET['action']))  $_GET['action']="";
+
+// speed up - no re-draw all when add or edit goods
 if($_GET['action'] != 'add' AND $_GET['action'] != 'item_edit') {
 
-if(empty($_GET['parent'])) $_GET['parent'] = 2;
+//first open page  - listing items
+if(empty($_GET['parent'])) $_GET['parent'] = 2;   //numeric  (else count throw error)
 if(empty($_GET['pages'])) $_GET['pages'] = 1;
 
 // принадлежность к магазинам
@@ -277,7 +270,7 @@ if(empty($_GET['pages'])) $_GET['pages'] = 1;
   //input op parent pages //output navi link bar
   include("./nav_bar.php");
   //$vstart in nav_bar.php
- // print_r ($direct_bar);
+ print_r ($direct_bar);
   $result = $db -> query("SELECT * ".$query." ORDER BY updown LIMIT $vstart,$c_pagenum");
  //$pages ... $pages;
   if ($result -> numRows() != 0) {
@@ -334,10 +327,10 @@ if(empty($_GET['pages'])) $_GET['pages'] = 1;
         } else $row['count_statu'] = 0;
 
         $tmpl -> setCurrentBlock("tovar");
-        $row[parent] = $parent;
+        $row['parent'] = $parent;
         $tmpl -> setVariable($row);
         $tmpl -> parseCurrentBlock("tovar");
-        $tmpl -> free();
+//        $tmpl -> free(); // php7.2 tmpl -> get no runs auto
         }
     $tmpl -> touchBlock("group");
   } else {
@@ -349,18 +342,18 @@ if(empty($_GET['pages'])) $_GET['pages'] = 1;
 
   if(!isset($parent) OR $parent == 2) {
         $parent=2;
-        $row['title'] = "";
+        $row['title'] = "";  // " / "
   } else {
         $row = $db -> getRow("SELECT * FROM category WHERE id='$parent' ORDER BY updown");
-        $children[parent] = $row[parent];
+        $children['parent'] = $row['parent'];
         $row['title'] = $row['name'];
           if ($parent == 1) {
                 $row['title'] = " / ".$row['title'];
                 $sel1 = " selected";
 //                  break;
           }
-        while ($children[parent] != 0) {
-         $id_parr = $children[parent];
+        while ($children['parent'] != 0) {
+         $id_parr = $children['parent'];
           $children = $db -> getRow("SELECT * FROM category WHERE id='$id_parr' ORDER BY updown");
           $id_chil = $children['id'];
           $nam_chil = $children['name'];
@@ -369,7 +362,7 @@ if(empty($_GET['pages'])) $_GET['pages'] = 1;
         $row['title'] = $row['title'];
 
         $tmpl -> setCurrentBlock('up_parent');
-        $tmpl->setVariable('up_parent',$row[parent]);
+        $tmpl->setVariable('up_parent',$row['parent']);
         $tmpl -> parseCurrentBlock('up_parent');
   }
   $row['count'] = $db -> getOne("SELECT COUNT(cid) FROM items WHERE cid = '1'");
@@ -393,7 +386,7 @@ viewvetka(2);
 ///
 ///
 
-
+ $tmpl -> setCurrentBlock('__global__');     // php7.2 workaround (works..)
   $tmpl -> setVariable('parent',$parent);
   if (!isset($sel1))  $sel1="";
   $tmpl -> setVariable('sel1',$sel1);
@@ -401,6 +394,7 @@ viewvetka(2);
   if ($direct_bar != " <font class=active>1</font> " AND !empty($direct_bar)) $tmpl -> setVariable('nav_bar',$direct_bar);
   if (!empty($pages)) $tmpl -> setVariable('pages',$pages);
   else $tmpl -> setVariable('pages',1);
+ $tmpl -> parseCurrentBlock();            // php7.2 workaround (works..)
 }
 
 
@@ -411,11 +405,14 @@ viewvetka(2);
 ////////////////////////////////////////
 
 function viewvetka($id,$level=0) {
+
+  if (!isset ($parent)) $parent = $_GET['parent']; 
+  
   GLOBAL $db, $tmpl, $parent;
   $result = $db -> query("SELECT * FROM category WHERE parent='$id' ORDER BY updown");
   while($row = $result -> fetchRow()) {
         if (!isset($row['csku']))  $row['csku']="";
-        $list[] = array($row[parent],$row['id'],$row['name'],$row['csku']);
+        $list[] = array($row['parent'],$row['id'],$row['name'],$row['csku']);
   }
   $i=0; $str = "";
   if (!empty($list)) {
@@ -429,7 +426,7 @@ function viewvetka($id,$level=0) {
           $res['name'] = " ".$item[2];
           $res['otstup'] = $str;
           $res['clas'] = "t";
-          if ($_GET[parent] == $item[1]) {
+          if ($_GET['parent'] == $item[1]) {
                 $res['selected'] = " selected";
                 $res['clas'] = "tb";
           }
