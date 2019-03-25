@@ -108,7 +108,7 @@ function ValidData() {
 <!-- BEGIN no_small_photo2 -->
 
 <!-- END no_small_photo2 -->
-<td class=t rowspan=6 colspan=2 align=center>
+<td class=t rowspan=7 colspan=2 align=center>
 <!-- BEGIN small_photo -->
 
           <img src=../images/photo/{small_foto} border=1 vspace=5><br>
@@ -152,9 +152,14 @@ function ValidData() {
         <td class=t><input type=text name=kod1c value="{kod1c}" style="width: 230px;"></td>
   </tr>
   <tr>
+        <td class=t align=right valign=top>Я Маркет: </td>
+        <td class=t> <input type=text name=market_show value="N" style="width: 230px;"></td>
+  </tr>
+  <tr>
         <td class=t align=right valign=top>Описание: </td>
         <td class=t valign=top><textarea name=description style="width: 230px;" rows=7 class="t">{description}</textarea></td>
   </tr>
+
 
   <tr>
         <td class=tb align=right>Магазины: </td>

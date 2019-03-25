@@ -47,6 +47,10 @@ switch ($_GET['action']) {
         $tmpl -> loadTemplatefile("item_add.inc",true,true);
         include("item_add.php");
         break;
+  case "add_item":
+        $tmpl -> loadTemplatefile("item_add.inc",true,true);
+        include("item_add.php");
+        break;
 
   case "item_edit":
         $tmpl -> loadTemplatefile("item_add.inc",true,true);
@@ -342,24 +346,31 @@ if(empty($_GET['pages'])) $_GET['pages'] = 1;
 
   if(!isset($parent) OR $parent == 2) {
         $parent=2;
-        $row['title'] = "";  // " / "
+        $row['title'] = " ";  // " / "
   } else {
         $row = $db -> getRow("SELECT * FROM category WHERE id='$parent' ORDER BY updown");
         $children['parent'] = $row['parent'];
+        $id_chil=$children['parent'];
         $row['title'] = $row['name'];
-          if ($parent == 1) {
-                $row['title'] = " / ".$row['title'];
+          if ($parent != 2) {
+                      //    $row['title'] = " / ".$row['title'];
                 $sel1 = " selected";
 //                  break;
           }
+
+// children category tree - make "breadcrump"  root / category / clild_level2 .. line 
         while ($children['parent'] != 0) {
-         $id_parr = $children['parent'];
-          $children = $db -> getRow("SELECT * FROM category WHERE id='$id_parr' ORDER BY updown");
+          $children = $db -> getRow("SELECT * FROM category WHERE id='$id_chil' ORDER BY updown");
+       if(!isset($children['id'])) {
+        // $id_parr = $children['id']; 
+         if ($children['id'] != 0) {
           $id_chil = $children['id'];
           $nam_chil = $children['name'];
-          $row['title'] = "<a href=index.php?op=item&parent=$id_chil&$nam_chil</a> / ". $row['title'];
+          $row['title'] = "<a href=index.php?op=item&parent=$id_chil&$nam_chil > / ". $row['title'];
+          } else {      $row['title'] = "<a href=index.php?op=item&parent=$parent&pages=$pages > / ". $row['title']; }
+       }
         }
-        $row['title'] = $row['title'];
+        //$row['title'] = $row['title'];
 
         $tmpl -> setCurrentBlock('up_parent');
         $tmpl->setVariable('up_parent',$row['parent']);

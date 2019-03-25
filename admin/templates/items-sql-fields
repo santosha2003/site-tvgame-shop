@@ -1,0 +1,74 @@
+Array
+(
+    [op] => item
+    [action] => add_item
+    [parent] => 70
+    [id] => 
+    [pages] => 
+    [tmpid] => 
+    [action2] => 
+    [name] => 33
+    [vendor] => 20
+    [mark] => 1
+    [model] => 2
+    [sku] => 34
+    [price] => 5
+    [price_opt] => 5
+    [kod1c] => 1
+    [description] => 33345
+    [shops] => Array
+        (
+            [0] => 1
+            [1] => 4
+        )
+
+    [statu] => 
+    [article] => 
+    [part] => 
+    [spec] => 
+    [rn] => Array
+        (
+            [0] => 
+            [1] => 
+            [2] => 
+            [3] => 
+            [4] => 
+            [5] => 
+            [6] => 
+            [7] => 
+            [8] => 
+            [9] => 
+        )
+
+    [rnew] => Array
+        (
+            [0] => 
+            [1] => 
+            [2] => 
+            [3] => 
+            [4] => 
+            [5] => 
+            [6] => 
+            [7] => 
+            [8] => 
+            [9] => 
+        )
+
+    [rvalue] => Array
+        (
+            [0] => 
+            [1] => 
+            [2] => 
+            [3] => 
+            [4] => 
+            [5] => 
+            [6] => 
+            [7] => 
+            [8] => 
+            [9] => 
+        )
+
+)
+
+Array ( [0] => action [1] => submit [2] => addtitle [3] => addurl [4] => parent [5] => item_name [6] => item_description [7] => pages [8] => op [9] => unique [10] => tmpid [11] => rn [12] => rnew [13] => rvalue [14] => action2 ) DB Error: unknown error
+INSERT INTO items (id, name, vendor, mark, model, sku, price, price_opt, kod1c, description, shops, statu, article, part, spec, photo_small, photo_small1, photo_small2, photo_big, photo_big1, photo_big2, svva, status, updown, cid) VALUES ('10095', '33', '20', '1', '2', '34', '5', '5', '1', '33345', '|1|4|', '', '', '', '', '', '', '', '', '', '', '', 'Y', '23', '70') [nativecode=1364 ** Field 'market_show' doesn't have a default value]

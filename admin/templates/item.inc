@@ -104,7 +104,7 @@ function submitForm(id) {
 
 <table width="100%" cellspacing="2" cellpadding="0" border="0">
 <tr>
-  <td class=t><a href=index.php?op=item&action=add&parent={parent}>Добавить новый товар в текущую категорию</a></td>
+  <td class=t><a href=index.php?op=item&action=add&parent={parent}&pages={pages}>Добавить новый товар в текущую категорию</a></td>
   <td class=t align=right>{nav_bar}</td>
 </tr>
 </table>

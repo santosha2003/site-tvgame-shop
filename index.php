@@ -24,6 +24,8 @@ $a = new Auth("DB",$users_params,false,false);
 $a -> setSessionname("www_users_ing");
 $a -> start();
 if (!isset ($_POST['op'])) $_POST['op']="";
+if (!isset ($_POST['id'])) $_POST['id']="";
+$id=$_POST['id'];
 switch($_POST['op']) {
   case "search":
         $_GET['op'] = "search";
@@ -62,10 +64,12 @@ switch($_POST['op']) {
         break;
   case "forgot":
           if(!empty($_POST['email'])) {
-                $pass = $db -> getOne("SELECT password1 FROM users WHERE username='$_POST[email]'");
+          $email=$_POST['email'];
+                $pass = $db -> getOne("SELECT password1 FROM users WHERE username='$email'");
                 if(!empty($pass)) {
                   $tmpl -> loadTemplatefile("forgot_mail.inc",true,true);
-                  $tmpl -> setVariable('email',$_POST['email']);
+        $tmpl -> setCurrentBlock('__global__'); 
+                         $tmpl -> setVariable('email',$_POST['email']);
                   $tmpl -> setVariable('password',$pass);
                   $page = $tmpl -> get();
                   sendmail($_POST['email'],$db->getOne("SELECT value FROM settings WHERE id='10'"),"Password from http://www.shedevr.ru/",$page);
@@ -108,6 +112,8 @@ if (!isset ($_GET['op'])) $_GET['op']="";
   $cid=$_GET['cid'];
   $row = $db -> getOne("SELECT name FROM category WHERE id='$cid' AND status='Y'");
    $rows = $db -> getOne("SELECT supertitle FROM category WHERE id='$cid' AND status='Y'");
+        $tmpl -> setCurrentBlock('__global__'); 
+
   if(!empty($row))
         $tmpl->setVariable('title',$row." - ");
         $tmpl->setVariable('supertitle',$rows);
@@ -146,7 +152,7 @@ if(!empty($_GET['id'])){
   // $rowz = $db -> getOne("SELECT model, FROM items WHERE id='$_GET[id]' AND status='Y'");
 
   if($_GET['op'] == 'catalog') {
-  if(!empty($_GET[pid])) $_GET[cid] = $_GET[pid];
+  if(!empty($_GET['pid'])) $_GET['cid'] = $_GET['pid'];
   $tmpl -> setVariable('termometr',termometr($_GET['cid']));
 }
 if(!empty($_GET['id'])) {
@@ -164,13 +170,27 @@ switch($_GET['op']) {
   case "order_snx":
 // вывод страницы благодарности
         $tmpl -> loadTemplatefile("order_snx.inc",true,true);
+//3-times only - if no register
+if (!isset($_SESSION['get_datasnx']))       $try=3;
+     else $try = $_SESSION['get_datasnx'];
+        if ($a->getAuth()) {
+          $try=5;
+        }
+        $try= $try-1;
+        $_SESSION['get_datasnx']=$try;
+        if ($try == 0) {
+          header("Location: index.php?op=reg");
+          exit;
+        }
+    $tmpl -> setCurrentBlock('__global__'); 
+
         $tmpl -> setVariable($_POST);
         $row = $db -> getRow("SELECT *,date_format(date_zid,'%d.%m.%Y') as date_zid,date_format(date_delivery,'%d.%m.%Y') as date_delivery FROM orders WHERE zid='$_GET[zid]'");
-        $time_delivery = explode("|",$row[time_delivery]);
+        $time_delivery = explode("|",$row['time_delivery']);
         $size =  sizeof($time_delivery)-1;
-        $row[time_delivery] = "";
+        $row['time_delivery'] = "";
          for($i = 1; $i < $size; $i++) {
-          $row[time_delivery] .= $time_delivery[$i]."<br>";
+          $row['time_delivery'] .= $time_delivery[$i]."<br>";
          }
         $tmpl -> setVariable($row);
 
@@ -179,13 +199,28 @@ switch($_GET['op']) {
   case "order_snx1":
 // вывод страницы благодарности
         $tmpl -> loadTemplatefile("order_snx1.inc",true,true);
-        $row = $db -> getRow("SELECT *,date_format(date_zid,'%d.%m.%Y') as date_zid,date_format(date_delivery,'%d.%m.%Y') as date_delivery FROM orders WHERE zid='$_GET[zid]'");
-        $time_delivery = explode("|",$row[time_delivery]);
-        $size =  sizeof($time_delivery)-1;
-        $row[time_delivery] = "";
-        for($i = 1; $i < $size; $i++) {
-          $row[time_delivery] .= $time_delivery[$i]."<br>";
+//3-times only - if no register
+if (!isset($_SESSION['get_datasnx']))       $try=3;
+     else $try = $_SESSION['get_datasnx'];
+        if ($a->getAuth()) {
+          $try=5;
         }
+        $try= $try-1;
+        $_SESSION['get_datasnx']=$try;
+        if ($try == 0) {
+          header("Location: index.php?op=reg");
+          exit;
+        }
+
+        $row = $db -> getRow("SELECT *,date_format(date_zid,'%d.%m.%Y') as date_zid,date_format(date_delivery,'%d.%m.%Y') as date_delivery FROM orders WHERE zid='$_GET[zid]'");
+        $time_delivery = explode("|",$row['time_delivery']);
+        $size =  sizeof($time_delivery)-1;
+        $row['time_delivery'] = "";
+        for($i = 1; $i < $size; $i++) {
+          $row['time_delivery'] .= $time_delivery[$i]."<br>";
+        }
+        $tmpl -> setCurrentBlock('__global__'); 
+
         $tmpl -> setVariable($row);
          $tmpl -> setVariable($_POST);
 
@@ -210,6 +245,8 @@ switch($_GET['op']) {
         if ($a->getAuth()) {
           $tmpl -> loadTemplatefile("register.inc",true,true);
           $row = $db -> getRow("SELECT * FROM users WHERE id='".$_SESSION['auth']['id']."'");
+        $tmpl -> setCurrentBlock('__global__'); 
+
           $tmpl -> setVariable($row);
           $tmpl -> setVariable('action',"cngreg");
           $tmpl -> setVariable('disab'," disabled");
@@ -259,6 +296,8 @@ switch($_GET['op']) {
         break;
   case "newreg":
         $tmpl -> loadTemplatefile("register.inc",true,true);
+        $tmpl -> setCurrentBlock('__global__'); 
+
         $tmpl -> setVariable($_POST);
         $tmpl -> setVariable('action',"newreg");
         $tmpl -> touchBlock('header_newreg');
@@ -324,6 +363,8 @@ $page .= $tmpl -> get();
 $tmpl -> loadTemplatefile("footer.inc",true,false);
 
 $content = $db -> getAll("SELECT url,shorttitle FROM content WHERE menu='checked' AND shops LIKE '%$shop_true_id%' ORDER BY updown");
+        $tmpl -> setCurrentBlock('__global__'); 
+
 if(!empty($content)) {
   foreach($content as $val) {
         $tmpl -> setCurrentBlock('list_menu');

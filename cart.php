@@ -4,17 +4,19 @@ require_once("./lib/shoppingcart.php");
 
 $cart = new Cart;
 
-switch($_POST[action]) {
+$id=$_POST['id'];
+
+switch($_POST['action']) {
   case "order":
-        $_GET[op] = 'order';
+        $_GET['op'] = 'order';
         break;
   case "add":
-        $cart -> add_item($_POST[id],$_POST[qnt]);
+        $cart -> add_item($_POST['id'],$_POST[qnt]);
         header("Location: index.php?op=cart");
         exit;
         break;
   case "mass_add":
-        $mass = $db -> getOne("SELECT items FROM spec WHERE id = '$_POST[id]' AND items != '' AND items != '|'");
+        $mass = $db -> getOne("SELECT items FROM spec WHERE id = '$id' AND items != '' AND items != '|'");
         if(!empty($mass)) {
           $mass = explode("|",$mass);
           $size =  sizeof($mass)-1;
@@ -30,8 +32,8 @@ switch($_POST[action]) {
                 foreach($_POST[qnt] as $key => $val)
                   $cart -> modify_quantity($key, $val);
           }
-          if(!empty($_POST[alldel])) {
-                foreach($_POST[alldel] as $key => $val)
+          if(!empty($_POST['alldel'])) {
+                foreach($_POST['alldel'] as $key => $val)
                   $cart -> delete_item($key);
           }
         header("Location: index.php?op=cart");
@@ -43,7 +45,7 @@ switch($_POST[action]) {
         if(!empty($content)) {
           foreach($content as $val) {
 $sp = $db -> getRow("SELECT items FROM spec WHERE items LIKE '%|$val[id]|%' AND status='Y' AND shops LIKE '%|$shop_true_id|%' AND start_date < now() AND (end_date > now() OR end_date='1970-01-01 00:00')");
-if(!empty($sp)) $val[sp] = "<img src=images/icon_sp.gif width=25 height=25>";
+if(!empty($sp)) $val['sp'] = "<img src=images/icon_sp.gif width=25 height=25>";
                 $tmpl -> setCurrentBlock('list_items');
                 $tmpl -> setVariable($val);
                 $tmpl -> parseCurrentBlock('list_items');

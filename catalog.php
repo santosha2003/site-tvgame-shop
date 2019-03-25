@@ -34,7 +34,7 @@ $log=fopen("countip/iplogfullstat.txt", "a+");
 $tmpl -> loadTemplatefile('catalog.inc',true,true);
 
 // debug
-//$tmpl ->show();
+$tmpl ->show();
 
 if(empty($_GET['cid'])) $_GET['cid'] = $_GET['pid'];
 
@@ -61,8 +61,8 @@ if(!empty($row)) {
 $row = $db -> getAll("SELECT id,cid,name,price,photo_small,model FROM items WHERE cid='$c_id' AND status='Y' AND shops LIKE '%|$shop_true_id|%' ORDER BY updown LIMIT $start,$per_page");
 if(!empty($row)) {
   foreach($row as $val) {
-        $val[photo_small] = photo_name($val[photo_small]);
-        $val[wh] = photo_size($val[photo_small],81,50);
+        $val['photo_small'] = photo_name($val['photo_small']);
+        $val[wh] = photo_size($val['photo_small'],81,50);
         $tmpl -> setCurrentBlock('list_items');
         $tmpl -> setVariable($val);
         $tmpl -> parseCurrentBlock('list_items');
@@ -72,9 +72,14 @@ if(!empty($row)) {
 
  $roww ="SELECT count(*) FROM items WHERE cid='$c_id' AND status='Y' AND shops LIKE '%|$shop_true_id|%'";
 
+        $tmpl -> setCurrentBlock('__global__');
+
 $tmpl -> setVariable('hr','<hr color="000000" size=1 noshade>');
- $res=mysql_query($roww);
-$rows=mysql_fetch_row($res);
+   $tmpl -> parseCurrentBlock();
+
+// php7.2 no more mysql (workaround- into config, re-write to Pear DB -already  patched - $db ->get)
+ $res=mysqli_query($roww);
+$rows=mysqli_fetch_row($res);
 
 $total_rows=$rows[0];
 $num_pages=ceil($total_rows/$per_page);

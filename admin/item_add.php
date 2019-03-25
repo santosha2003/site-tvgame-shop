@@ -5,13 +5,21 @@ if($_SESSION['auth']['perm'] != 'oper') {
   header("Location: index.php");
   exit;
 }
-//echo "<pre>";
-//print_r ($_POST);
+echo "<pre>";
+print_r ($_POST);
 //print_r ($_GET);
 //print_r ($_SESSION);
-//echo "</pre>";
+echo "</pre>";
 
 if (!isset($_POST['action'])) $_POST['action']="";
+if (!isset($_POST['id'])) $_POST['id']="";
+if (!isset($_POST['parent'])) $_POST['parent']="";
+if (!isset($_POST['pages'])) $_POST['pages']="";
+
+$id1=$_POST['id'];                     // for edit action
+$addr_r2=  $_POST['parent'];
+$addr_r3=  $_POST['pages'];
+
 switch ($_POST['action']) {
 
 // добавить товар
@@ -134,16 +142,17 @@ $parent=$_POST['parent'];
 // сохранение данных от товаре
         $_POST['id'] = $db -> nextID("items");
         $_POST['status'] = "Y";
-        $_POST['updown'] = $db -> getOne("SELECT MAX(updown) FROM items WHERE cid=$parent") + 10;
+        $_POST['updown'] = $db -> getOne("SELECT MAX(updown) FROM items WHERE cid=$parent") + 10;   // sorting order
         $_POST['cid'] = $_POST['parent'];
         $missing = array("action","submit","addtitle","addurl","parent","item_name","item_description","pages","op","unique","tmpid","rn","rnew","rvalue","action2");
         if (!isset($insert)) $insert="";
-        $result = $form -> add("items",$missing,$insert);
+ //print_r ($_POST);
+        $result = $form -> add("items",$missing,$insert);  //FormProc.php lib
 
 // сохранение технических характеристик
-        ref_items();
+        ref_items();                    //$_POST  .. id cid 
 
-        header("Location: index.php?op=item&parent=$parent&pages=$pages");
+        header("Location: index.php?op=item&parent=$parent&pages=$pages");  //debug (comment line) - add market_show for Yandex into template form
         break;
 
 /////////////////////////////
@@ -153,9 +162,6 @@ $parent=$_POST['parent'];
 //////////////////////////
   case "item_edit":
 
-$id1=$_POST['id'];
-$addr_r2=  $_POST[parent];
-$addr_r3=  $_POST[pages];
 
 // запрос на удаление фотографии
         if(!empty($_POST['action2'])) {
@@ -500,12 +506,12 @@ switch ($_GET['action']) {
           }
         }
 
-        if (!isset($_GET[parent])) $_GET[parent]="";
+        if (!isset($_GET['parent'])) $_GET['parent']="";
 
                 $tmpl -> setCurrentBlock('__global__');
 
         $tmpl -> setVariable('action',"add_item");
-        $tmpl -> setVariable('parent',$_GET[parent]);
+        $tmpl -> setVariable('parent',$_GET['parent']);
         $tmpl -> touchBlock('no_small_photo');
         $tmpl -> touchBlock('no_big_photo');
         $tmpl -> touchBlock('head_add');

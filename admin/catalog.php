@@ -10,7 +10,7 @@ echo "<pre>" ;
  print_r ($_GET);
   echo "</pre>";
 
-$tmpl -> loadTemplatefile('catalog.inc',false,false);
+$tmpl -> loadTemplatefile('catalog.inc',true,true);
 
 if (!isset ($_POST['action']))  $_POST['action']="";
  if (!isset ($_POST['parent']))  $_POST['parent']="2";
@@ -193,10 +193,12 @@ switch ($_GET['action']) {
           $rows = $db -> getRow("SELECT * FROM category WHERE id = '$id'");
           $rows['action'] = "edit_cat";
 //          $tmpl -> setVariable($rows);
-          $tmpl -> setCurrentBlock("submit_edit");
+          $tmpl -> setCurrentBlock('submit_edit');
           $tmpl -> setVariable('sedit',"submit");
           $tmpl -> parseCurrentBlock("submit_edit");
 //          $tmpl -> free();   //no auto add to page - php7.2 
+          $tmpl -> setCurrentBlock('__global__');
+
           $tmpl -> setVariable('action',"edit_cat");
           $tmpl -> setVariable('parent',$rows['parent']);
           $tmpl -> setVariable('id',$rows['id']);
@@ -208,6 +210,8 @@ switch ($_GET['action']) {
                 $tmpl -> setVariable($post);
                 session_unregister('post');
           }
+          $tmpl -> parseCurrentBlock();
+
         break;
 
   case "del_cat":
@@ -312,21 +316,28 @@ switch ($_GET['action']) {
   default:
 
            if (!isset($error)) $error="";
-           $post = $_POST;
-          $tmpl -> setVariable($post);
-          //$tmpl -> free();
           $tmpl -> setCurrentBlock("submit_add");
           $tmpl -> setVariable('sadd',"submit");
           $tmpl -> parseCurrentBlock("submit_add");
-          $tmpl -> free();
+
+           $post = $_POST;
+          $tmpl -> setCurrentBlock('__global__');
+
+          $tmpl -> setVariable($post);
+          //$tmpl -> free();
+    //      $tmpl -> free();
           $tmpl -> setVariable('action',"add_cat");
           $tmpl -> setVariable('parent',$parent);
           //$tmpl -> setVariable('warning',$error);
           $tmpl -> touchBlock('header_add');
+          $tmpl -> setCurrentBlock('__global__');
+
           if(session_is_registered('post')) {
                 $tmpl -> setVariable($post);
                 session_unregister('post');
           }
+          $tmpl -> parseCurrentBlock();
+
           break;
 }
 

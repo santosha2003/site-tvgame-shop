@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("./auth.php");
 
 if($_SESSION['auth']['perm'] != 'oper') {
@@ -7,6 +7,12 @@ if($_SESSION['auth']['perm'] != 'oper') {
 }
 
 if(!empty($_POST)) {
+
+id='$_POST[id]'
+ shop='$_POST[shop]'  
+ source='$_POST[source]
+ '$_POST[description]'
+
   $db -> query("DELETE FROM description WHERE id='$_POST[id]' AND shop='$_POST[shop]' AND source='$_POST[source]'");
   if(!empty($_POST[description])) {
         $db -> query("INSERT INTO description (id,shop,source,description) VALUES ('$_POST[id]','$_POST[shop]','$_POST[source]','$_POST[description]')");

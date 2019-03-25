@@ -108,9 +108,9 @@ if (! isset($PXM_REG_GLOB)) {
       //$$key = (get_magic_quotes_gpc()) ? $val : addslashes($val);
     }
   }
-  array_walk_recursive($_POST, 'stripslashes');  //$_COOKIE,$_SESSION 
-  array_walk_recursive($_GET, 'stripslashes');
-  array_walk_recursive($_COOKIE, 'stripslashes');
+//  array_walk_recursive($_POST, 'stripslashes');  //$_COOKIE,$_SESSION 
+//  array_walk_recursive($_GET, 'stripslashes');
+//  array_walk_recursive($_COOKIE, 'stripslashes');
    //array_walk_recursive($_SESSION, 'stripslashes');
 
 

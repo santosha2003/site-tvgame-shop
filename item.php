@@ -7,43 +7,43 @@ $idgoods = $_GET['id'];
 $row = $db -> getRow("SELECT * FROM items WHERE id='$idgoods' AND status ='Y' AND shops LIKE '%|$shop_true_id|%'");
 if(!empty($row)) {
 
-if($row[photo_small1]) {
-list($width1, $height1) = getimagesize("images/photo/".$row[photo_big1]);
+if($row['photo_small1']) {
+list($width1, $height1) = getimagesize("images/photo/".$row['photo_big1']);
 
   $tmpl -> setCurrentBlock('photo_small1');
 $row[width1]=$width1+20;
 $row[height1]=$height1+30;
-$row[w1]="70";
-$row[h1]="70";
-$row[border1]="1";
+$row['w1']="70";
+$row['h1']="70";
+$row['border1']="1";
 //
 $tmpl -> parseCurrentBlock('photo_small1');
 }else{
-$row[w1]="1";
-$row[h1]="1";
-$row[border1]="0";
-$row[photo_small1]="1p.gif";
+$row['w1']="1";
+$row['h1']="1";
+$row['border1']="0";
+$row['photo_small1']="1p.gif";
 //
 $tmpl -> touchBlock('no_photo_small1');
 }
 
 if(!empty($row[photo_small2])){
-list($width2, $height2) = getimagesize("images/photo/".$row[photo_big2]);
+list($width2, $height2) = getimagesize("images/photo/".$row['photo_big2']);
 $row[width2]=$width2+20;
 $row[height2]=$height2+30;
 //
 $tmpl -> setCurrentBlock('photo_small2');
-$row[w2]="70";
-$row[h2]="70";
-$row[border2]="1";
+$row['w2']="70";
+$row['h2']="70";
+$row['border2']="1";
   $tmpl -> parseCurrentBlock('photo_small2');
 }else{
 //
 $tmpl -> touchBlock('no_photo_small2');
-$row[w2]="1";
-$row[h2]="1";
-$row[border2]="0";
-$row[photo_small2]="1p.gif";
+$row['w2']="1";
+$row['h2']="1";
+$row['border2']="0";
+$row['photo_small2']="1p.gif";
 }
 
 
@@ -52,10 +52,10 @@ $row[photo_small2]="1p.gif";
 
 
 // не выводить модель и артикул
-  if(empty($row[sku])) unset($row[sku]);
-  if(empty($row[model])) unset($row[model]);
-  if(empty($row[mark])) unset($row[mark]);
-list($width, $height) = getimagesize("images/photo/".$row[photo_big]);
+  if(empty($row['sku'])) unset($row['sku']);
+  if(empty($row['model'])) unset($row['model']);
+  if(empty($row['mark'])) unset($row['mark']);
+list($width, $height) = getimagesize("images/photo/".$row['photo_big']);
 $row[width]=$width+20;
 $row[height]=$height+30;
 
@@ -67,8 +67,8 @@ $row[height]=$height+30;
   // производитель
   $ref = $db -> getRow("SELECT name as vendor_name, photo as vendor_pic FROM vendor WHERE id='$row[vendor]' AND status='Y'");
   if(!empty($ref)) {
-        $ref[vendor_pic] = photo_name($ref[vendor_pic],"images/pict/");
-        $ref[vendor_wh] = photo_size($ref[vendor_pic],150,50);
+        $ref['vendor_pic'] = photo_name($ref['vendor_pic'],"images/pict/");
+        $ref['vendor_wh'] = photo_size($ref['vendor_pic'],150,50);
         $tmpl -> setCurrentBlock("vendor");
         $tmpl -> setVariable($ref);
         $tmpl -> parseCurrentBlock("vendor");
@@ -83,18 +83,23 @@ $row[height]=$height+30;
         }
   }
 // связаные товары
-  bottom_block($row[part],"part","items","name",array("model","price"));        // связаные товары
+  bottom_block($row['part'],"part","items","name",array("model","price"));        // связаные товары
 // рекомендованые товары
-  bottom_block($row[spec],"spec","items","name",array("model","price"));        // рекомендованые товары
+  bottom_block($row['spec'],"spec","items","name",array("model","price"));        // рекомендованые товары
 // связаные статьи
-  bottom_block($row[article],"article","content","shorttitle");                                // связаные статьи
+  bottom_block($row['article'],"article","content","shorttitle");                                // связаные статьи
 // свойства товара
-  bottom_block($row[svva],"svva","svva","name",array("photo","id"));
-  $row[nalich]="Есть в наличии";
-  $row[photo_big] = photo_name($row[photo_big]);
-  $row[photo_small] = photo_name($row[photo_small]);
-  $row[wh] = photo_size($row[photo_small],200,150);
+  bottom_block($row['svva'],"svva","svva","name",array("photo","id"));
+  $row['nalich']="Есть в наличии";
+  $row['photo_big'] = photo_name($row['photo_big']);
+  $row['photo_small'] = photo_name($row['photo_small']);
+  $row['wh'] = photo_size($row['photo_small'],200,150);
+
+   $tmpl -> setCurrentBlock('__global__');
+
   $tmpl -> setVariable($row);
+
+   $tmpl -> parseCurrentBlock();
 
 // иконка для новинки, товара сезона, спецпредложения
   if(!empty($row['new'])        AND strpos($row['new'],"|$shop_true_id|") !== false)        $tmpl->touchBlock('new');
@@ -162,5 +167,5 @@ if(!empty($faq)) {
  }
  $tmpl -> setVariable("idtov", $idgoods);
  $val[cid] = $db -> getOne("SELECT cid FROM items WHERE id='$idgoods'");
- $tmpl -> setVariable("cid", $val[cid]);
+ $tmpl -> setVariable("cid", $val['cid']);
  ?>
